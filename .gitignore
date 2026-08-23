@@ -35,3 +35,7 @@ Thumbs.db
 *.egg-info/
 dist/
 build/
+
+db_backup_*.sqlite3
+data.json
+# initial_data.json

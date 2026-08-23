@@ -1,0 +1,118 @@
+[
+{
+  "model": "tickets.perfil",
+  "pk": 1,
+  "fields": {
+    "nombre": "ADMIN",
+    "created_at": "2026-08-13T22:23:41.703Z",
+    "updated_at": "2026-08-13T22:23:41.703Z"
+  }
+},
+{
+  "model": "tickets.perfil",
+  "pk": 2,
+  "fields": {
+    "nombre": "ORGANIZER",
+    "created_at": "2026-08-13T22:24:14.001Z",
+    "updated_at": "2026-08-13T22:24:14.001Z"
+  }
+},
+{
+  "model": "tickets.perfil",
+  "pk": 3,
+  "fields": {
+    "nombre": "VALIDATOR",
+    "created_at": "2026-08-13T22:24:18.807Z",
+    "updated_at": "2026-08-13T22:24:18.807Z"
+  }
+},
+{
+  "model": "tickets.perfil",
+  "pk": 4,
+  "fields": {
+    "nombre": "VIEWER",
+    "created_at": "2026-08-13T22:24:24.996Z",
+    "updated_at": "2026-08-13T22:24:24.996Z"
+  }
+},
+{
+  "model": "tickets.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$bOkkcKR2U6t9QOgIzeFdRN$+WHdhrspQefQz8cghUtH8Bcb6jSBQxozrArepdtkOqg=",
+    "last_login": "2026-08-23T19:45:10.562Z",
+    "is_superuser": true,
+    "username": "esteban_universe",
+    "first_name": "",
+    "last_name": "",
+    "email": "jeffthekiller3201@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-13T22:19:04Z",
+    "perfil": 1,
+    "created_at": "2026-08-13T22:19:04.858Z",
+    "updated_at": "2026-08-20T20:32:40.057Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tickets.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$3fNn22Z0oFa6llTrGj5w47$XaR5ZdxPscVa8YDZv+thPnHKnKhxJJFdl0Dil+QXXO8=",
+    "last_login": "2026-08-20T21:53:51.744Z",
+    "is_superuser": false,
+    "username": "Vau",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-20T21:52:39.299Z",
+    "perfil": 1,
+    "created_at": "2026-08-20T21:52:39.932Z",
+    "updated_at": "2026-08-20T21:53:03.605Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "tickets.tickettype",
+  "pk": 1,
+  "fields": {
+    "nombre": "NORMAL",
+    "regalos": null,
+    "created_at": "2026-08-13T22:24:44.987Z",
+    "created_by": null,
+    "updated_at": "2026-08-13T22:24:44.987Z",
+    "updated_by": null
+  }
+},
+{
+  "model": "tickets.tickettype",
+  "pk": 2,
+  "fields": {
+    "nombre": "VIP",
+    "regalos": {
+      "llavero": {
+        "cant": 1,
+        "list": [
+          "Perú",
+          "Chile",
+          "USA",
+          "Rusia",
+          "USSR",
+          "Third Reich"
+        ]
+      }
+    },
+    "created_at": "2026-08-15T04:34:30.048Z",
+    "created_by": [
+      "esteban_universe"
+    ],
+    "updated_at": "2026-08-15T04:35:31.493Z",
+    "updated_by": [
+      "esteban_universe"
+    ]
+  }
+}
+]
