@@ -38,4 +38,4 @@ build/
 
 db_backup_*.sqlite3
 data.json
-# initial_data.json
+initial_data.json
