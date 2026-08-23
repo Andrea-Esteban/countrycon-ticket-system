@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>COUNTRYCON - Iniciar sesión</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-family: Arial, sans-serif;
+
+        background: #f5f5f5;
+        color: #222;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 420px;
+
+        padding: 20px;
+      }
+
+      .login-card {
+        background: white;
+
+        padding: 35px;
+
+        border-radius: 12px;
+
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .logo h1 {
+        margin: 0;
+        font-size: 32px;
+      }
+
+      .logo p {
+        margin-top: 8px;
+        color: #777;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        font-weight: bold;
+      }
+
+      .form-group input {
+        width: 100%;
+
+        padding: 12px;
+
+        border: 1px solid #ccc;
+        border-radius: 6px;
+
+        font-size: 15px;
+
+        outline: none;
+      }
+
+      .form-group input:focus {
+        border-color: #111;
+      }
+
+      .login-button {
+        width: 100%;
+
+        padding: 12px;
+
+        border: none;
+        border-radius: 6px;
+
+        background: #111;
+        color: white;
+
+        font-size: 16px;
+        font-weight: bold;
+
+        cursor: pointer;
+      }
+
+      .login-button:hover {
+        background: #333;
+      }
+
+      .error-message {
+        margin-bottom: 20px;
+
+        padding: 12px;
+
+        border-radius: 6px;
+
+        background: #fee2e2;
+        color: #b91c1c;
+
+        text-align: center;
+
+        font-size: 14px;
+      }
+
+      .footer {
+        margin-top: 20px;
+
+        text-align: center;
+
+        color: #888;
+
+        font-size: 13px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="logo">
+          <h1>COUNTRYCON</h1>
+
+          <p>Panel de administración</p>
+        </div>
+
+        {% if error %}
+
+        <div class="error-message">{{ error }}</div>
+
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="username"> Usuario </label>
+
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Ingresa tu usuario"
+              required
+              autofocus
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"> Contraseña </label>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Ingresa tu contraseña"
+              required
+            />
+          </div>
+
+          <button type="submit" class="login-button">Iniciar sesión</button>
+        </form>
+      </div>
+
+      <div class="footer">COUNTRYCON © 2026</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Countrycon - Scanner
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .scanner-page {
+        min-height: calc(100vh - 80px);
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 40px 20px;
+    }
+
+    .scanner-container {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .scanner-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        text-align: center;
+    }
+
+    .scanner-card h1 {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .scanner-card > p {
+        margin-bottom: 20px;
+    }
+
+    #reader {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    #reader video {
+        border-radius: 10px;
+    }
+
+    #result {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    #result.success {
+        display: block;
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    #result.error {
+        display: block;
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    #result.warning {
+        display: block;
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    #result h2 {
+        margin-top: 0;
+    }
+
+    .ticket-info {
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    .ticket-info p {
+        margin: 8px 0;
+    }
+
+    #scan-again {
+        display: none;
+        margin-top: 15px;
+
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+
+        cursor: pointer;
+        font-size: 16px;
+
+        background: #111827;
+        color: white;
+    }
+
+    #scan-again:hover {
+        background: #1f2937;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="scanner-page">
+
+    {% csrf_token %}
+
+    <div class="scanner-container">
+
+        <div class="scanner-card">
+
+            <h1>COUNTRYCON</h1>
+
+            <p>Escanea el código QR del ticket</p>
+
+            <div id="reader"></div>
+
+            <div id="result"></div>
+
+            <button
+                type="button"
+                id="scan-again"
+                onclick="restartScanner()"
+            >
+                Escanear nuevamente
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+
+    function getCSRFToken() {
+        return document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+        ).value;
+    }
+
+    let scanner = null;
+    let processing = false;
+
+    console.log("Iniciando scanner...");
+
+
+    function showResult(
+        type,
+        title,
+        message,
+        ticket = null,
+        usedAt = null
+    ) {
+
+        const result = document.getElementById("result");
+
+        result.className = type;
+
+        let html = `
+            <h2>${title}</h2>
+            <p>${message}</p>
+        `;
+
+        if (ticket) {
+
+            html += `
+                <div class="ticket-info">
+
+                    <p>
+                        <strong>Código:</strong>
+                        ${ticket.code}
+                    </p>
+
+                    <p>
+                        <strong>Tipo:</strong>
+                        ${ticket.ticket_type}
+                    </p>
+            `;
+
+            if (ticket.gift) {
+
+                html += `
+                    <p>
+                        <strong>Regalo:</strong>
+                        ${ticket.gift.type}
+                    </p>
+
+                    <p>
+                        <strong>Cantidad:</strong>
+                        ${ticket.gift.quantity}
+                    </p>
+
+                    <p>
+                        <strong>Selección:</strong>
+                        ${ticket.gift.selection}
+                    </p>
+                `;
+            }
+
+            if (ticket.partner) {
+
+                html += `
+                    <p>
+                        <strong>
+                            El ingresante es menor de edad
+                            y su acompañante es:
+                        </strong>
+
+                        ${ticket.partner.nombre}
+                        ${ticket.partner.apellido_paterno}
+                        ${ticket.partner.apellido_materno}
+                    </p>
+                `;
+            }
+
+            html += `
+                </div>
+            `;
+        }
+
+        if (usedAt) {
+
+            const date = new Date(usedAt);
+
+            html += `
+                <p>
+                    <strong>Utilizado:</strong>
+                    ${date.toLocaleString("es-PE")}
+                </p>
+            `;
+        }
+
+        result.innerHTML = html;
+        result.style.display = "block";
+    }
+
+
+    async function validateQR(idQr) {
+
+        try {
+
+            const response = await fetch(
+                "/api/qr/validate/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+
+                    body: JSON.stringify({
+                        id_qr: idQr,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+
+            if (response.status === 200) {
+
+                showResult(
+                    "success",
+                    "✓ TICKET VÁLIDO",
+                    "Entrada registrada correctamente.",
+                    data.ticket
+                );
+
+            } else if (response.status === 409) {
+
+                showResult(
+                    "warning",
+                    "⚠ TICKET YA UTILIZADO",
+                    data.message,
+                    data.ticket,
+                    data.used_at
+                );
+
+            } else if (response.status === 404) {
+
+                showResult(
+                    "error",
+                    "✕ QR NO ENCONTRADO",
+                    data.message
+                );
+
+            } else {
+
+                showResult(
+                    "error",
+                    "✕ ERROR",
+                    data.message ||
+                    "No se pudo validar el QR."
+                );
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            showResult(
+                "error",
+                "✕ ERROR DE CONEXIÓN",
+                "No se pudo conectar con el servidor."
+            );
+        }
+    }
+
+
+    async function onScanSuccess(decodedText) {
+
+        if (processing) {
+            return;
+        }
+
+        processing = true;
+
+        console.log("QR detectado:", decodedText);
+
+        try {
+            await scanner.stop();
+        } catch (error) {
+            console.error("Error deteniendo scanner:", error);
+        }
+
+        document.getElementById(
+            "scan-again"
+        ).style.display = "inline-block";
+
+        await validateQR(decodedText);
+    }
+
+
+    function onScanFailure(error) {
+        // La librería ejecuta esta función
+        // mientras busca un QR.
+    }
+
+
+    function startScanner() {
+
+        scanner = new Html5Qrcode("reader");
+
+        scanner
+            .start(
+                {
+                    facingMode: "environment",
+                },
+                {
+                    fps: 10,
+
+                    qrbox: {
+                        width: 250,
+                        height: 250,
+                    },
+                },
+
+                onScanSuccess,
+                onScanFailure
+            )
+
+            .catch((error) => {
+
+                console.error(error);
+
+                showResult(
+                    "error",
+                    "✕ CÁMARA NO DISPONIBLE",
+                    "No fue posible acceder a la cámara."
+                );
+            });
+    }
+
+
+    function restartScanner() {
+
+        processing = false;
+
+        document.getElementById(
+            "result"
+        ).style.display = "none";
+
+        document.getElementById(
+            "scan-again"
+        ).style.display = "none";
+
+        document.getElementById(
+            "reader"
+        ).innerHTML = "";
+
+        startScanner();
+    }
+
+
+    startScanner();
+
+</script>
+
+{% endblock %}

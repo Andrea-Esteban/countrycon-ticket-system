@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>COUNTRYCON - Inicio</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #222;
+      }
+
+      /* 
+      .header {
+        background: #111;
+        color: white;
+        padding: 25px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 32px;
+      }
+
+      .header p {
+        margin: 8px 0 0;
+        color: #ccc;
+      } 
+        */
+
+      .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+        gap: 25px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+
+        text-align: center;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      }
+
+      .icon {
+        font-size: 45px;
+        margin-bottom: 15px;
+      }
+
+      .card h2 {
+        margin: 10px 0;
+      }
+
+      .card p {
+        color: #666;
+        min-height: 40px;
+      }
+
+      .button {
+        display: inline-block;
+
+        margin-top: 15px;
+
+        padding: 10px 20px;
+
+        background: #111;
+        color: white;
+
+        text-decoration: none;
+
+        border-radius: 6px;
+
+        transition: background 0.2s;
+      }
+
+      .button:hover {
+        background: #333;
+      }
+
+      .footer {
+        text-align: center;
+        color: #777;
+        margin: 50px 0 20px;
+      }
+      .header {
+        width: 100%;
+        min-height: 75px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 35px;
+
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+
+        box-sizing: border-box;
+      }
+
+      /* =========================
+         BRAND
+      ========================= */
+
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-icon {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background: #111827;
+        color: white;
+
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .header h1 {
+        margin: 0;
+
+        font-size: 20px;
+        font-weight: 700;
+
+        letter-spacing: 1px;
+
+        color: #111827;
+      }
+
+      .header p {
+        margin: 3px 0 0;
+
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      /* =========================
+         USER MENU
+      ========================= */
+
+      .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-avatar {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #f3f4f6;
+        color: #374151;
+
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .user-greeting {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .user-role {
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+      }
+
+      /* =========================
+         DIVIDER
+      ========================= */
+
+      .user-divider {
+        width: 1px;
+        height: 30px;
+        background: #e5e7eb;
+      }
+
+      /* =========================
+         LOGOUT
+      ========================= */
+
+      .logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 8px 12px;
+
+        border-radius: 7px;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 500;
+
+        color: #6b7280;
+
+        transition: all 0.2s ease;
+      }
+
+      .logout-btn span {
+        font-size: 17px;
+      }
+
+      .logout-btn:hover {
+        background: #fef2f2;
+        color: #dc2626;
+      }
+
+      /* =========================
+         RESPONSIVE
+      ========================= */
+
+      @media (max-width: 700px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .header p {
+          display: none;
+        }
+
+        .user-details {
+          display: none;
+        }
+
+        .user-divider {
+          display: none;
+        }
+
+        .logout-btn {
+          font-size: 0;
+          padding: 8px;
+        }
+
+        .logout-btn span {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="header-brand">
+        <div class="brand-icon">C</div>
+
+        <div>
+          <h1>COUNTRYCON</h1>
+          <p>Panel de administración</p>
+        </div>
+      </div>
+
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-avatar">{{ user.username|first|upper }}</div>
+
+          <div class="user-details">
+            <span class="user-greeting"> Hola, {{ user.username }} </span>
+
+            <span class="user-role"> {{ user.perfil.nombre }} </span>
+          </div>
+        </div>
+
+        <div class="user-divider"></div>
+
+        <a href="{% url 'logout' %}" class="logout-btn">
+          <span>↪</span>
+          Cerrar sesión
+        </a>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="cards">
+        <!-- Tickets -->
+        {% if user.perfil.nombre == "ADMIN" %}
+
+        <div class="card">
+          <div class="icon">🎟️</div>
+
+          <h2>Tickets</h2>
+
+          <p>Crear y administrar los tickets del evento.</p>
+
+          <a href="/tickets/" class="button"> Acceder </a>
+        </div>
+
+        <!-- Buyers -->
+
+        <div class="card">
+          <div class="icon">👥</div>
+
+          <h2>Compradores</h2>
+
+          <p>Registrar y administrar compradores.</p>
+
+          <a href="/buyers/" class="button"> Acceder </a>
+        </div>
+
+        <div class="card">
+          <div class="icon">🛡️</div>
+
+          <h2>Usuarios</h2>
+
+          <p>Registrar y administrar usuarios.</p>
+
+          <a href="/users/" class="button"> Acceder </a>
+        </div>
+        {% endif %}
+        <!-- Scanner -->
+
+        <div class="card">
+          <div class="icon">📷</div>
+
+          <h2>Scanner QR</h2>
+
+          <p>Validar tickets en el ingreso al evento.</p>
+
+          <a href="/scanner/" class="button"> Acceder </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">COUNTRYCON © 2026</footer>
+  </body>
+</html>

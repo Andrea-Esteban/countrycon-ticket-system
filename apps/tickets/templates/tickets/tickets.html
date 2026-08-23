@@ -1,0 +1,1307 @@
+{% extends "base.html" %} {% block title %} Gestión de Tickets - COUNTRYCON2026
+{% endblock %} {% block extra_css %}
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+  }
+
+  select,
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+  }
+
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .btn-primary {
+    background: #222;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .gift-box {
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+  }
+
+  #message {
+    display: none;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  #message.success {
+    display: block;
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  #message.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .ticket-result {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+  }
+
+  .ticket-result p {
+    margin: 8px 0;
+  }
+
+  .tickets-section {
+    margin-top: 30px;
+  }
+
+  .tickets-section h2 {
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .tickets-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+
+  .tickets-table th,
+  .tickets-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .tickets-table th {
+    background: #f5f5f5;
+    font-weight: bold;
+  }
+
+  .tickets-table tbody tr:hover {
+    background: #fafafa;
+  }
+
+  /* Estado de pago */
+
+  .payment-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    font-size: 22px;
+
+    padding: 4px 8px;
+  }
+
+  .payment-button.unpaid {
+    color: #dc2626;
+  }
+
+  .payment-button.unpaid:hover {
+    transform: scale(1.15);
+  }
+
+  .payment-status.paid {
+    color: #16a34a;
+    font-size: 22px;
+  }
+  .detail-button {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .detail-button:hover {
+    background: #e0e0e0;
+  }
+  .modal {
+    display: none;
+
+    position: fixed;
+    z-index: 1000;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    position: relative;
+
+    background: white;
+
+    width: 90%;
+    max-width: 500px;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-close {
+    position: absolute;
+
+    right: 15px;
+    top: 10px;
+
+    border: none;
+    background: none;
+
+    font-size: 28px;
+    cursor: pointer;
+  }
+
+  .detail-row {
+    margin: 12px 0;
+  }
+
+  .detail-row strong {
+    display: inline-block;
+    min-width: 120px;
+  }
+</style>
+{% endblock %} 
+{% block content %}
+{% csrf_token %}
+
+<div class="container">
+  <div class="card">
+
+    <h2>Crear ticket</h2>
+
+    <div id="message"></div>
+
+    <form id="ticket-form">
+      <!-- BUYER -->
+      <div class="form-group">
+        <label for="buyer"> Comprador </label>
+
+        <select id="buyer" required>
+          <option value="">Seleccionar comprador...</option>
+        </select>
+      </div>
+
+      <!-- TICKET TYPE -->
+      <div class="form-group">
+        <label for="ticket-type"> Tipo de ticket </label>
+
+        <select id="ticket-type" required>
+          <option value="">Seleccionar tipo...</option>
+        </select>
+      </div>
+
+      <!-- GIFTS -->
+      <div id="gifts-container" class="gift-box hidden">
+        <h3>Regalos</h3>
+
+        <div id="gifts-fields"></div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="save-ticket">
+        Crear ticket
+      </button>
+    </form>
+
+    <div id="ticket-result" class="ticket-result hidden"></div>
+    <hr />
+
+    <div class="tickets-section">
+      <h2>Tickets creados</h2>
+
+      <div id="tickets-error" class="message error" style="display: none"></div>
+
+      <div class="table-container">
+        <table class="tickets-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Comprador</th>
+              <th>Tipo</th>
+              <th>Regalo</th>
+              <th>Pagado</th>
+              <th>Usado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="tickets-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="ticket-modal" class="modal">
+    <div class="modal-content">
+      <button type="button" class="modal-close" onclick="closeTicketDetail()">
+        ×
+      </button>
+
+      <h2>Detalle del ticket</h2>
+
+      <div id="ticket-detail"></div>
+    </div>
+  </div>
+  <div id="editTicketModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Editar ticket</h2>
+
+        <button type="button" onclick="closeEditTicketModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="editTicketId" />
+
+        <div class="form-group">
+          <label for="editBuyer"> Comprador </label>
+
+          <select id="editBuyer" class="form-control">
+            <option value="">Seleccionar comprador</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="editGiftContainer">
+          <label for="editGift"> Regalo </label>
+
+          <select id="editGift" class="form-control">
+            <option value="">Seleccionar regalo</option>
+          </select>
+        </div>
+
+        <div
+          id="editTicketError"
+          class="error-message"
+          style="display: none"
+        ></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" onclick="closeEditTicketModal()">Cancelar</button>
+
+        <button type="button" onclick="saveTicketChanges()">
+          Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} 
+{% block extra_js %}
+<script>
+  function getCSRFToken() {
+    return document.querySelector("[name=csrfmiddlewaretoken]").value;
+  }
+  const buyerSelect = document.getElementById("buyer");
+
+  const ticketTypeSelect = document.getElementById("ticket-type");
+
+  const giftsContainer = document.getElementById("gifts-container");
+
+  const giftsFields = document.getElementById("gifts-fields");
+
+  const ticketForm = document.getElementById("ticket-form");
+
+  const message = document.getElementById("message");
+
+  const ticketResult = document.getElementById("ticket-result");
+
+  const saveButton = document.getElementById("save-ticket");
+
+  function showMessage(type, text) {
+    message.className = type;
+
+    message.textContent = text;
+
+    message.style.display = "block";
+  }
+
+  function hideMessage() {
+    message.style.display = "none";
+
+    message.textContent = "";
+  }
+
+  async function loadBuyers() {
+    try {
+      const response = await fetch("/api/buyers/");
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "No se pudieron cargar los compradores.",
+        );
+      }
+
+      /*
+       * Dependiendo de cómo tengas configurada
+       * la respuesta del endpoint, puede venir:
+       *
+       * [
+       *   {...},
+       *   {...}
+       * ]
+       *
+       * o:
+       *
+       * {
+       *   "results": [...]
+       * }
+       */
+
+      const buyers = Array.isArray(data) ? data : data.results || [];
+
+      buyers.forEach((buyer) => {
+        const option = document.createElement("option");
+
+        option.value = buyer.id;
+
+        option.textContent = `${buyer.nombre} ${buyer.apellido_paterno || ""} - DNI ${buyer.dni}`;
+
+        buyerSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+
+      showMessage("error", error.message);
+    }
+  }
+
+  async function loadTicketTypes() {
+    try {
+      const response = await fetch("/api/ticket-types/");
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "No se pudieron cargar los tipos de ticket.",
+        );
+      }
+
+      const ticketTypes = Array.isArray(data) ? data : data.results || [];
+
+      ticketTypes.forEach((ticketType) => {
+        const option = document.createElement("option");
+
+        option.value = ticketType.id;
+
+        option.textContent = ticketType.nombre;
+
+        ticketTypeSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+
+      showMessage("error", error.message);
+    }
+  }
+
+  async function loadGifts(ticketTypeId) {
+    giftsContainer.classList.add("hidden");
+
+    giftsFields.innerHTML = "";
+
+    if (!ticketTypeId) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/ticket-types/${ticketTypeId}/gifts/`);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "No se pudieron cargar los regalos.");
+      }
+
+      const regalos = data.regalos || {};
+
+      const giftNames = Object.keys(regalos);
+
+      if (giftNames.length === 0) {
+        return;
+      }
+
+      giftNames.forEach((giftName) => {
+        const gift = regalos[giftName];
+
+        const group = document.createElement("div");
+
+        group.className = "form-group";
+
+        const label = document.createElement("label");
+
+        label.textContent = `${giftName} (${gift.cant})`;
+
+        const select = document.createElement("select");
+
+        select.dataset.gift = giftName;
+
+        select.required = true;
+
+        const defaultOption = document.createElement("option");
+
+        defaultOption.value = "";
+
+        defaultOption.textContent = `Seleccionar ${giftName}...`;
+
+        select.appendChild(defaultOption);
+
+        (gift.list || []).forEach((item) => {
+          const option = document.createElement("option");
+
+          option.value = item;
+
+          option.textContent = item;
+
+          select.appendChild(option);
+        });
+
+        group.appendChild(label);
+
+        group.appendChild(select);
+
+        giftsFields.appendChild(group);
+      });
+
+      giftsContainer.classList.remove("hidden");
+    } catch (error) {
+      console.error(error);
+
+      showMessage("error", error.message);
+    }
+  }
+
+  ticketTypeSelect.addEventListener("change", function () {
+    loadGifts(this.value);
+  });
+
+  ticketForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    hideMessage();
+
+    saveButton.disabled = true;
+
+    try {
+      const buyerId = buyerSelect.value;
+
+      const ticketTypeId = ticketTypeSelect.value;
+
+      const giftSelections = {};
+
+      const giftSelects = giftsFields.querySelectorAll("select[data-gift]");
+
+      giftSelects.forEach((select) => {
+        giftSelections[select.dataset.gift] = select.value;
+      });
+
+      const body = {
+        buyer_id: parseInt(buyerId),
+
+        ticket_type_id: parseInt(ticketTypeId),
+      };
+
+      if (Object.keys(giftSelections).length > 0) {
+        body.gift_selections = giftSelections;
+      }
+
+      const response = await fetch("/api/tickets/", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCSRFToken(),
+        },
+
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      tickets = result;
+
+      if (!response.ok) {
+        /*
+         * DRF puede devolver:
+         *
+         * {
+         *   "buyer_id": [...]
+         * }
+         *
+         * o:
+         *
+         * {
+         *   "message": "..."
+         * }
+         */
+
+        let errorMessage =
+          result.message || result.detail || "No se pudo crear el ticket.";
+
+        if (typeof result === "object" && !result.message && !result.detail) {
+          const errors = [];
+
+          Object.entries(result).forEach(([field, values]) => {
+            if (Array.isArray(values)) {
+              errors.push(`${field}: ${values.join(", ")}`);
+            }
+          });
+
+          if (errors.length > 0) {
+            errorMessage = errors.join(" | ");
+          }
+        }
+
+        throw new Error(errorMessage);
+      }
+
+      showMessage("success", "Ticket creado correctamente.");
+
+      ticketResult.innerHTML = `
+              <h3>Ticket creado</h3>
+
+              <p>
+                <strong>Código:</strong>
+                ${result.code}
+              </p>
+
+              <p>
+                <strong>Tipo:</strong>
+                ${
+                  result.ticket_type ||
+                  ticketTypeSelect.options[ticketTypeSelect.selectedIndex].text
+                }
+              </p>
+
+              <p>
+                <strong>QR:</strong>
+                ${result.id_qr}
+              </p>
+            `;
+
+      ticketResult.classList.remove("hidden");
+
+      ticketForm.reset();
+
+      giftsContainer.classList.add("hidden");
+
+      giftsFields.innerHTML = "";
+    } catch (error) {
+      console.error(error);
+
+      showMessage("error", error.message);
+    } finally {
+      saveButton.disabled = false;
+      await loadTickets();
+    }
+  });
+
+  loadBuyers();
+
+  loadTicketTypes();
+</script>
+<script>
+  let tickets = [];
+  let ticketTypes = [];
+  let editingTicket = null;
+  console.log("Cargando tickets...");
+  async function loadTickets() {
+    const tbody = document.getElementById("tickets-body");
+    const errorContainer = document.getElementById("tickets-error");
+
+    try {
+      errorContainer.style.display = "none";
+
+      console.log("Cargando tickets...");
+
+      const response = await fetch("/api/tickets/", {
+        method: "GET",
+        headers: {
+          "X-CSRFToken": getCSRFToken(),
+        },
+      });
+
+      const result = await response.json();
+
+      console.log("RESULTADO GET TICKETS:", result);
+
+      if (!response.ok) {
+        throw new Error(
+          result.message ||
+            result.detail ||
+            "No se pudieron cargar los tickets.",
+        );
+      }
+
+      // IMPORTANTE: NO pongas const/let aquí
+      tickets = result;
+
+      console.log("VARIABLE GLOBAL tickets:", tickets);
+
+      tbody.innerHTML = "";
+
+      result.forEach((ticket) => {
+        const row = document.createElement("tr");
+
+        const buyer = ticket.buyer;
+
+        const buyerName = [
+          buyer.nombre,
+          buyer.apellido_paterno,
+          buyer.apellido_materno,
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        row.innerHTML = `
+                  <td>
+                      ${ticket.code}
+                  </td>
+
+                  <td>
+                      ${buyerName}
+                  </td>
+
+                  <td>
+                      ${ticket.ticket_type}
+                  </td>
+
+                  <td>
+                      ${getGiftElement(ticket)}
+                  </td>
+
+                  <td>
+                      ${getPaymentElement(ticket)}
+                  </td>
+
+                  <td>
+                      ${ticket.is_used ? "Sí" : "No"}
+                  </td>
+
+                  <td>
+                      <button
+                          type="button"
+                          class="detail-button"
+                          onclick="showTicketDetail(${ticket.id})"
+                      >
+                          👁 Ver
+                      </button>
+                      <button
+                          class="btn-action"
+                          onclick="editTicket(${ticket.id})"
+                          title="Editar"
+                      >
+                          ✏️
+                      </button>
+
+                      <button
+                          class="btn-action danger"
+                          onclick="deactivateTicket(${ticket.id})"
+                          title="Desactivar"
+                      >
+                          🗑️
+                      </button>
+                  </td>
+
+              `;
+
+        tbody.appendChild(row);
+      });
+    } catch (error) {
+      console.error(error);
+
+      errorContainer.textContent = error.message;
+
+      errorContainer.style.display = "block";
+    }
+  }
+
+  function getPaymentElement(ticket) {
+    if (ticket.is_paid) {
+      return `
+                      <span
+                          class="payment-status paid"
+                          title="Ticket pagado"
+                      >
+                          🟢
+                      </span>
+                  `;
+    }
+
+    return `
+                  <button
+                      type="button"
+                      class="payment-button unpaid"
+                      title="Marcar como pagado"
+                      onclick="markTicketAsPaid(${ticket.id})"
+                  >
+                      🔴
+                  </button>
+              `;
+  }
+
+  function getGiftElement(ticket) {
+    if (!ticket.gift) {
+      return "-";
+    }
+
+    return `
+          <div>
+              <strong>${ticket.gift.type}</strong>
+              <br>
+              <small>
+                  ${ticket.gift.selection || "Sin selección"}
+              </small>
+          </div>
+      `;
+  }
+
+  async function markTicketAsPaid(ticketId) {
+    const confirmed = confirm(
+      "¿Confirmas que este ticket ha sido pagado?\n\n" +
+        "Se enviará el código QR al correo del comprador.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/tickets/${ticketId}/`, {
+        method: "PATCH",
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCSRFToken(),
+        },
+
+        body: JSON.stringify({
+          is_paid: true,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.message ||
+            result.detail ||
+            "No se pudo marcar el ticket como pagado.",
+        );
+      }
+
+      alert("Ticket pagado correctamente. Se envió el QR al correo.");
+
+      await loadTickets();
+    } catch (error) {
+      console.error(error);
+
+      alert(error.message);
+    }
+  }
+  function showTicketDetail(ticketId) {
+    console.log("ticketId recibido:", ticketId);
+    console.log("tickets:", tickets);
+
+    const ticket = tickets.find(
+      (ticket) => Number(ticket.id) === Number(ticketId),
+    );
+
+    console.log("Ticket encontrado:", ticket);
+
+    if (!ticket) {
+      alert("No se encontró la información del ticket.");
+      return;
+    }
+    // ...
+
+    const buyer = ticket.buyer;
+
+    const buyerName = [
+      buyer.nombre,
+      buyer.apellido_paterno,
+      buyer.apellido_materno,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    let giftHtml = "-";
+
+    if (ticket.gift) {
+      giftHtml = `
+              ${ticket.gift.type}
+              -
+              ${ticket.gift.selection || "Sin selección"}
+              (cantidad: ${ticket.gift.quantity})
+          `;
+    }
+
+    const detail = document.getElementById("ticket-detail");
+
+    detail.innerHTML = `
+              <div class="detail-row">
+                  <strong>Código:</strong>
+                  ${ticket.code}
+              </div>
+
+              <div class="detail-row">
+                  <strong>Comprador:</strong>
+                  ${buyerName}
+              </div>
+
+              <div class="detail-row">
+                  <strong>Tipo:</strong>
+                  ${ticket.ticket_type}
+              </div>
+
+              <div class="detail-row">
+                  <strong>Regalo:</strong>
+                  ${giftHtml}
+              </div>
+
+              <div class="detail-row">
+                  <strong>Pagado:</strong>
+                  ${ticket.is_paid ? "Sí" : "No"}
+              </div>
+
+              <div class="detail-row">
+                  <strong>Utilizado:</strong>
+                  ${ticket.is_used ? "Sí" : "No"}
+              </div>
+
+              <div class="detail-row">
+                  <strong>QR:</strong>
+                  <small>${ticket.id_qr}</small>
+              </div>
+          `;
+
+    document.getElementById("ticket-modal").style.display = "flex";
+  }
+  function closeTicketDetail() {
+    document.getElementById("ticket-modal").style.display = "none";
+  }
+
+  async function editTicket(ticketId) {
+    const ticket = tickets.find(
+      (ticket) => Number(ticket.id) === Number(ticketId),
+    );
+
+    console.log("Ticket a editar:", ticket);
+
+    if (!ticket) {
+      alert("No se encontró la información del ticket.");
+
+      return;
+    }
+
+    editingTicket = ticket;
+
+    document.getElementById("editTicketId").value = ticket.id;
+
+    document.getElementById("editTicketError").style.display = "none";
+
+    /*
+     * Cargar compradores
+     */
+    await loadEditBuyers(ticket.buyer.id);
+
+    /*
+     * Si es VIP cargar regalos
+     */
+    if (ticket.ticket_type === "VIP") {
+      document.getElementById("editGiftContainer").style.display = "block";
+
+      await loadEditGifts(ticket);
+    } else {
+      document.getElementById("editGiftContainer").style.display = "none";
+    }
+
+    document.getElementById("editTicketModal").style.display = "flex";
+  }
+  async function loadEditBuyers(selectedBuyerId) {
+    const select = document.getElementById("editBuyer");
+
+    select.innerHTML = `
+        <option value="">
+            Cargando compradores...
+        </option>
+    `;
+
+    try {
+      const response = await fetch("/api/buyers/");
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "No se pudieron cargar los compradores.",
+        );
+      }
+
+      const buyers = Array.isArray(data) ? data : data.results || [];
+
+      select.innerHTML = `
+            <option value="">
+                Seleccionar comprador
+            </option>
+        `;
+
+      buyers.forEach((buyer) => {
+        const option = document.createElement("option");
+
+        option.value = buyer.id;
+
+        option.textContent = `${buyer.nombre} ${buyer.apellido_paterno || ""} ${buyer.apellido_materno || ""} - DNI ${buyer.dni}`;
+
+        if (Number(buyer.id) === Number(selectedBuyerId)) {
+          option.selected = true;
+        }
+
+        select.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+
+      select.innerHTML = `
+            <option value="">
+                Error cargando compradores
+            </option>
+        `;
+    }
+  }
+  async function loadEditGifts(ticket) {
+    const select = document.getElementById("editGift");
+
+    select.innerHTML = `
+        <option value="">
+            Cargando regalos...
+        </option>
+    `;
+
+    console.log("Ticket recibido para editar:", ticket);
+    console.log("ticketTypes actuales:", ticketTypes);
+
+    // Si todavía no tenemos los tipos de ticket,
+    // los cargamos directamente.
+    if (!ticketTypes.length) {
+      try {
+        const response = await fetch("/api/ticket-types/");
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.detail || "No se pudieron cargar los tipos de ticket.",
+          );
+        }
+
+        ticketTypes = Array.isArray(data) ? data : data.results || [];
+
+        console.log("ticketTypes cargados para edición:", ticketTypes);
+      } catch (error) {
+        console.error("Error cargando tipos de ticket:", error);
+
+        select.innerHTML = `
+                <option value="">
+                    No se pudieron cargar los regalos
+                </option>
+            `;
+
+        return;
+      }
+    }
+
+    const ticketType = ticketTypes.find(
+      (type) =>
+        type.nombre &&
+        type.nombre.toUpperCase() === ticket.ticket_type.toUpperCase(),
+    );
+
+    console.log("ticketType encontrado:", ticketType);
+
+    if (!ticketType) {
+      console.error("No se encontró el tipo:", ticket.ticket_type);
+
+      select.innerHTML = `
+            <option value="">
+                No se encontró el tipo de ticket
+            </option>
+        `;
+
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/ticket-types/${ticketType.id}/gifts/`);
+      console.log("Respuesta de regalos:", response);
+      const data = await response.json();
+      console.log("Datos de regalos:", data);
+      if (!response.ok) {
+        throw new Error(data.detail || "No se pudieron cargar los regalos.");
+      }
+
+      const regalos = data.regalos || {};
+
+      select.innerHTML = `
+            <option value="">
+                Seleccionar regalo
+            </option>
+        `;
+
+      Object.entries(regalos).forEach(([giftType, config]) => {
+        (config.list || []).forEach((item) => {
+          const option = document.createElement("option");
+
+          option.value = item;
+
+          option.textContent = item;
+
+          /*
+           * Seleccionar el regalo
+           * actual del ticket
+           */
+          if (ticket.gift && ticket.gift.selection === item) {
+            option.selected = true;
+          }
+
+          select.appendChild(option);
+        });
+      });
+    } catch (error) {
+      console.error("Error cargando regalos:", error);
+
+      select.innerHTML = `
+            <option value="">
+                Error cargando regalos
+            </option>
+        `;
+    }
+  }
+  async function saveTicketChanges() {
+    if (!editingTicket) {
+      return;
+    }
+
+    const ticketId = document.getElementById("editTicketId").value;
+
+    const buyerId = document.getElementById("editBuyer").value;
+
+    const errorContainer = document.getElementById("editTicketError");
+
+    errorContainer.style.display = "none";
+
+    /*
+     * Validar comprador
+     */
+    if (!buyerId) {
+      errorContainer.textContent = "Debes seleccionar un comprador.";
+
+      errorContainer.style.display = "block";
+
+      return;
+    }
+
+    const body = {
+      buyer_id: Number(buyerId),
+    };
+
+    /*
+     * VIP
+     */
+    if (editingTicket.ticket_type === "VIP") {
+      const gift = document.getElementById("editGift").value;
+
+      if (!gift) {
+        errorContainer.textContent = "Debes seleccionar un regalo.";
+
+        errorContainer.style.display = "block";
+
+        return;
+      }
+
+      body.gift_selections = {
+        llavero: gift,
+      };
+    }
+
+    try {
+      const response = await fetch(`/api/tickets/${ticketId}/`, {
+        method: "PATCH",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          "X-CSRFToken": getCSRFToken(),
+        },
+
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || result.detail || "No se pudo actualizar el ticket.",
+        );
+      }
+
+      closeEditTicketModal();
+
+      await loadTickets();
+
+      alert("Ticket actualizado correctamente.");
+    } catch (error) {
+      console.error(error);
+
+      errorContainer.textContent = error.message;
+
+      errorContainer.style.display = "block";
+    }
+  }
+  function closeEditTicketModal() {
+    document.getElementById("editTicketModal").style.display = "none";
+
+    editingTicket = null;
+  }
+  async function deactivateTicket(ticketId) {
+    const ticket = tickets.find(
+      (ticket) => Number(ticket.id) === Number(ticketId),
+    );
+
+    if (!ticket) {
+      return;
+    }
+
+    if (ticket.is_used) {
+      alert("No se puede desactivar un ticket que ya fue utilizado.");
+
+      return;
+    }
+
+    const confirmed = confirm(`¿Deseas desactivar el ticket ${ticket.code}?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/tickets/${ticketId}/`, {
+        method: "PATCH",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          "X-CSRFToken": getCSRFToken(),
+        },
+
+        body: JSON.stringify({
+          is_active: false,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || result.detail || "No se pudo desactivar el ticket.",
+        );
+      }
+
+      alert("Ticket desactivado correctamente.");
+
+      await loadTickets();
+    } catch (error) {
+      console.error(error);
+
+      alert(error.message);
+    }
+  }
+  loadTickets();
+</script>
+{% endblock %}

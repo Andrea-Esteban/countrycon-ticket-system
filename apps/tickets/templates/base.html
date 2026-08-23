@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{% block title %} COUNTRYCON {% endblock %}</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f6f8;
+        color: #1f2937;
+      }
+
+      /* =========================
+           HEADER
+        ========================= */
+
+      .header {
+        height: 70px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 30px;
+
+        background: #ffffff;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 35px;
+      }
+
+      .logo {
+        font-size: 23px;
+        font-weight: 800;
+        color: #111827;
+        text-decoration: none;
+      }
+
+      /* =========================
+           NAV
+        ========================= */
+
+      .main-nav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .main-nav a {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 9px 13px;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        color: #4b5563;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .main-nav a:hover {
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      .main-nav a.active {
+        background: #111827;
+        color: #ffffff;
+      }
+
+      /* =========================
+           USER
+        ========================= */
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .user-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .user-profile {
+        margin-top: 2px;
+
+        font-size: 11px;
+        font-weight: 600;
+
+        color: #6b7280;
+        text-transform: uppercase;
+      }
+
+      .logout-button {
+        padding: 8px 13px;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        color: #dc2626;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: background 0.2s ease;
+      }
+
+      .logout-button:hover {
+        background: #fef2f2;
+      }
+
+      /* =========================
+           CONTENIDO
+        ========================= */
+
+      .page-content {
+        padding: 30px;
+      }
+
+      /* =========================
+           RESPONSIVE
+        ========================= */
+
+      @media (max-width: 900px) {
+        .header {
+          padding: 0 15px;
+        }
+
+        .header-left {
+          gap: 15px;
+        }
+
+        .main-nav a {
+          padding: 8px;
+        }
+
+        .main-nav a span.text {
+          display: none;
+        }
+
+        .user-info {
+          display: none;
+        }
+
+        .page-content {
+          padding: 20px 15px;
+        }
+      }
+    </style>
+
+    {% block extra_css %} {% endblock %}
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <a href="{% url 'home' %}" class="logo"> COUNTRYCON </a>
+        <nav class="main-nav">
+          {% if user.is_authenticated %}
+
+          <!-- INICIO -->
+          <a
+            href="{% url 'home' %}"
+            class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+          >
+            🏠
+            <span class="text">Inicio</span>
+          </a>
+
+          <!-- TICKETS -->
+          {% if user.perfil.nombre == "ADMIN" %}
+          <a
+            href="{% url 'tickets' %}"
+            class="{% if request.resolver_match.url_name == 'tickets' %}active{% endif %}"
+          >
+            🎫
+            <span class="text">Tickets</span>
+          </a>
+
+          <!-- COMPRADORES -->
+          <a
+            href="{% url 'buyers' %}"
+            class="{% if request.resolver_match.url_name == 'buyers' %}active{% endif %}"
+          >
+            👥
+            <span class="text">Compradores</span>
+          </a>
+          {% endif %}
+
+          <!-- SCANNER -->
+          {% if user.perfil.nombre == "ADMIN" or user.perfil.nombre == "VALIDADOR" %}
+          <a
+            href="{% url 'scanner' %}"
+            class="{% if request.resolver_match.url_name == 'scanner' %}active{% endif %}"
+          >
+            📷
+            <span class="text">Scanner</span>
+          </a>
+          {% endif %}
+
+          <!-- USUARIOS -->
+            {% if user.perfil.nombre == "ADMIN" %}
+            <a
+              href="{% url 'users' %}"
+              class="{% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+            >
+              👤
+              <span class="text">Usuarios</span>
+            </a>
+            {% endif %} 
+          {% endif %}
+        </nav>
+      </div>
+
+      {% if user.is_authenticated %}
+
+      <div class="header-right">
+        <div class="user-info">
+          <span class="user-name"> {{ user.username }} </span>
+
+          <span class="user-profile"> {{ user.perfil.nombre }} </span>
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout-button"> Cerrar sesión </a>
+      </div>
+
+      {% endif %}
+    </header>
+
+    <main class="page-content">{% block content %} {% endblock %}</main>
+
+    {% block extra_js %} 
+    {% endblock %}
+  </body>
+</html>
