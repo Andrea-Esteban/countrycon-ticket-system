@@ -31,12 +31,9 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    for host in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
     if host.strip()
 ]
-for local_host in ("127.0.0.1", "localhost"):
-    if local_host not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append(local_host)
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
@@ -74,6 +71,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
