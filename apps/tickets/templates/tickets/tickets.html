@@ -407,7 +407,7 @@
 
   async function loadBuyers() {
     try {
-      const response = await fetch("/api/buyers/");
+      const response = await fetch(`${BASE_URL}/api/buyers/`);
 
       const data = await response.json();
 
@@ -453,7 +453,7 @@
 
   async function loadTicketTypes() {
     try {
-      const response = await fetch("/api/ticket-types/");
+      const response = await fetch(`${BASE_URL}/api/ticket-types/`);
 
       const data = await response.json();
 
@@ -491,7 +491,7 @@
     }
 
     try {
-      const response = await fetch(`/api/ticket-types/${ticketTypeId}/gifts/`);
+      const response = await fetch(`${BASE_URL}/api/ticket-types/${ticketTypeId}/gifts/`);
 
       const data = await response.json();
 
@@ -591,7 +591,7 @@
         body.gift_selections = giftSelections;
       }
 
-      const response = await fetch("/api/tickets/", {
+      const response = await fetch(`${BASE_URL}/api/tickets/`, {
         method: "POST",
 
         headers: {
@@ -700,7 +700,7 @@
 
       console.log("Cargando tickets...");
 
-      const response = await fetch("/api/tickets/", {
+      const response = await fetch(`${BASE_URL}/api/tickets/`, {
         method: "GET",
         headers: {
           "X-CSRFToken": getCSRFToken(),
@@ -853,7 +853,7 @@
     }
 
     try {
-      const response = await fetch(`/api/tickets/${ticketId}/`, {
+      const response = await fetch(`${BASE_URL}/api/tickets/${ticketId}/`, {
         method: "PATCH",
 
         headers: {
@@ -1014,7 +1014,7 @@
     `;
 
     try {
-      const response = await fetch("/api/buyers/");
+      const response = await fetch(`${BASE_URL}/api/buyers/`);
 
       const data = await response.json();
 
@@ -1071,7 +1071,7 @@
     // los cargamos directamente.
     if (!ticketTypes.length) {
       try {
-        const response = await fetch("/api/ticket-types/");
+        const response = await fetch(`${BASE_URL}/api/ticket-types/`);
 
         const data = await response.json();
 
@@ -1118,7 +1118,7 @@
     }
 
     try {
-      const response = await fetch(`/api/ticket-types/${ticketType.id}/gifts/`);
+      const response = await fetch(`${BASE_URL}/api/ticket-types/${ticketType.id}/gifts/`);
       console.log("Respuesta de regalos:", response);
       const data = await response.json();
       console.log("Datos de regalos:", data);
@@ -1211,7 +1211,7 @@
     }
 
     try {
-      const response = await fetch(`/api/tickets/${ticketId}/`, {
+      const response = await fetch(`${BASE_URL}/api/tickets/${ticketId}/`, {
         method: "PATCH",
 
         headers: {
@@ -1271,7 +1271,7 @@
     }
 
     try {
-      const response = await fetch(`/api/tickets/${ticketId}/`, {
+      const response = await fetch(`${BASE_URL}/api/tickets/${ticketId}/`, {
         method: "PATCH",
 
         headers: {

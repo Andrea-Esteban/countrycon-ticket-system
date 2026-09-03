@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     try {
-      const response = await fetch(`/api/ticket-types/${ticketTypeId}/gifts/`);
+      const response = await fetch(`${BASE_URL}/api/ticket-types/${ticketTypeId}/gifts/`);
 
       if (!response.ok) {
         throw new Error("No se pudieron obtener los regalos");

@@ -232,8 +232,9 @@
 {% endblock %} 
 {% block extra_js %}
     <script>
-      const API_USERS = "/api/users/";
-      const API_PROFILES = "/api/perfiles/";
+      const API_USERS = `${BASE_URL}/api/users/`;
+      const API_PROFILES = `${BASE_URL}/api/perfiles/`;
+
 
       let users = [];
       let profiles = [];

@@ -340,7 +340,7 @@
 
           <p>Crear y administrar los tickets del evento.</p>
 
-          <a href="/tickets/" class="button"> Acceder </a>
+          <a href="{% url 'tickets' %}" class="button">Acceder</a>
         </div>
 
         <!-- Buyers -->
@@ -352,7 +352,7 @@
 
           <p>Registrar y administrar compradores.</p>
 
-          <a href="/buyers/" class="button"> Acceder </a>
+          <a href="{% url 'buyers' %}" class="button">Acceder</a>`
         </div>
 
         <div class="card">
@@ -361,8 +361,8 @@
           <h2>Usuarios</h2>
 
           <p>Registrar y administrar usuarios.</p>
-
-          <a href="/users/" class="button"> Acceder </a>
+          
+          <a href="{% url 'users' %}" class="button"> Acceder </a>
         </div>
         {% endif %}
         <!-- Scanner -->
@@ -374,7 +374,7 @@
 
           <p>Validar tickets en el ingreso al evento.</p>
 
-          <a href="/scanner/" class="button"> Acceder </a>
+          <a href="{% url 'scanner' %}" class="button"> Acceder </a>
         </div>
       </div>
     </main>

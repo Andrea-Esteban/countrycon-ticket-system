@@ -267,7 +267,7 @@
     </header>
 
     <main class="page-content">{% block content %} {% endblock %}</main>
-
+    <script> const BASE_URL = "{{ request.script_name }}"; </script>
     {% block extra_js %} 
     {% endblock %}
   </body>
