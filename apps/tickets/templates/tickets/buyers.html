@@ -375,7 +375,8 @@
 
       async function loadBuyers() {
         try {
-          const response = await fetch("/api/buyers/");
+          
+          const response = await fetch(`${BASE_URL}/api/buyers/`);
 
           if (!response.ok) {
             throw new Error("No se pudieron cargar los compradores.");
@@ -568,7 +569,7 @@
 
       async function editBuyer(id) {
         try {
-          const response = await fetch(`/api/buyers/${id}/`);
+          const response = await fetch(`${BASE_URL}/api/buyers/${id}/`);
 
           if (!response.ok) {
             throw new Error("No se pudo obtener el comprador.");
@@ -688,7 +689,7 @@
                * PATCH
                */
 
-              response = await fetch(`/api/buyers/${id}/`, {
+              response = await fetch(`${BASE_URL}/api/buyers/${id}/`, {
                 method: "PATCH",
 
                 headers: {
@@ -703,7 +704,7 @@
                * POST
                */
 
-              response = await fetch("/api/buyers/", {
+              response = await fetch(`${BASE_URL}/api/buyers/`, {
                 method: "POST",
 
                 headers: {
