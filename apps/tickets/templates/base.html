@@ -267,7 +267,8 @@
     </header>
 
     <main class="page-content">{% block content %} {% endblock %}</main>
-    <script> const BASE_URL = "{{ request.script_name }}"; </script>
+    <script> const BASE_URL = "{{ DJANGO_BASE_URL }}"; </script>
+
     {% block extra_js %} 
     {% endblock %}
   </body>
