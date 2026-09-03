@@ -174,8 +174,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 AUTH_USER_MODEL = "tickets.User"
 
 
-LOGIN_URL = "/login/"
-FORCE_SCRIPT_NAME = "/countrycon" if not DEBUG else ""
+LOGIN_URL = "/countrycon/login/"
+FORCE_SCRIPT_NAME = "/countrycon"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login/"
 
