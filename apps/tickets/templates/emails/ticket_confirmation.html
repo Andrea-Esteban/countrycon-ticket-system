@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu entrada para COUNTRYCON</title>
+</head>
+
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, Helvetica, sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 30px 15px;">
+        <tr>
+            <td align="center">
+
+                <table width="600" cellpadding="0" cellspacing="0" border="0"
+                       style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden;">
+
+                    <!-- Encabezado -->
+                    <tr>
+                        <td align="center"
+                            style="background-color: #111111; padding: 0;">
+
+                            <img src="cid:BANNER_EMAIL"
+                                alt="COUNTRYCON"
+                                width="600"
+                                style="
+                                    display: block;
+                                    width: 100%;
+                                    max-width: 600px;
+                                    height: auto;
+                                ">
+
+                        </td>
+                    </tr>
+
+                    <!-- Contenido -->
+                    <tr>
+                        <td style="padding: 35px 30px;">
+
+                            <p style="margin: 0 0 15px; font-size: 18px; color: #222222;">
+                                Hola {{ ticket.buyer.nombre }},
+                            </p>
+
+                            <p style="margin: 0 0 25px; font-size: 15px; line-height: 1.6; color: #555555;">
+                                Tu entrada para <strong>COUNTRYCON</strong> ha sido
+                                confirmada correctamente.
+                            </p>
+
+                            <!-- Información del ticket -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                   style="background-color: #f7f7f7; border-radius: 8px; margin-bottom: 30px;">
+
+                                <tr>
+                                    <td style="padding: 20px;">
+
+                                        <div style="font-size: 12px; color: #777777; margin-bottom: 5px;">
+                                            CÓDIGO DE TICKET
+                                        </div>
+
+                                        <div style="font-size: 24px; font-weight: bold; color: #111111; margin-bottom: 20px;">
+                                            {{ ticket.code }}
+                                        </div>
+
+                                        <div style="font-size: 12px; color: #777777; margin-bottom: 5px;">
+                                            TIPO DE ENTRADA
+                                        </div>
+
+                                        <div style="font-size: 16px; font-weight: bold; color: #111111;">
+                                            {{ ticket.ticket_type.nombre }}
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <!-- QR -->
+                            <div style="text-align: center;">
+
+                                <p style="margin: 0 0 15px; font-size: 15px; font-weight: bold; color: #222222;">
+                                    Tu código QR
+                                </p>
+
+                                <p style="margin: 0 0 20px; font-size: 14px; color: #666666;">
+                                    Presenta este código al ingresar al evento.
+                                </p>
+
+                                <img src="cid:ticket_qr"
+                                     alt="Código QR de entrada"
+                                     width="220"
+                                     style="display: block; margin: 0 auto; width: 220px; height: 220px;">
+
+                            </div>
+
+                            <p style="margin: 30px 0 0; text-align: center; font-size: 14px; color: #666666;">
+                                Te recomendamos guardar este correo para facilitar
+                                tu ingreso al evento.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center"
+                            style="background-color: #111111; padding: 20px;">
+
+                            <div style="font-size: 13px; color: #cccccc;">
+                                ¡Nos vemos en COUNTRYCON!
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
