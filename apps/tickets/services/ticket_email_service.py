@@ -63,7 +63,7 @@ class TicketEmailService:
         banner.add_header(
             "Content-Disposition",
             "inline",
-            filename="BANNER_EMAIL2.PNG"
+            filename="BANNER_EMAIL2.png"
         )
 
         gift = None
