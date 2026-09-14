@@ -14,7 +14,7 @@ class BuyerRepository:
         ).first()
 
     def get_all(self):
-        return Buyer.objects.all()
+        return Buyer.objects.all().order_by('id')
 
     def create(self, **data):
         return Buyer.objects.create(**data)

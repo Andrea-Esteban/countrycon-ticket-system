@@ -1,26 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu entrada para COUNTRYCON</title>
 </head>
 
-<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, Helvetica, sans-serif;">
+<body style="
+    margin: 0;
+    padding: 0;
+    background-color: #210014;
+    font-family: Arial, Helvetica, sans-serif;
+">
 
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 30px 15px;">
+
+    <!-- Fondo general -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background-color: #210014; padding: 30px 12px;">
+
         <tr>
             <td align="center">
 
+                <!-- CONTENEDOR PRINCIPAL -->
                 <table width="600" cellpadding="0" cellspacing="0" border="0"
-                       style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden;">
+                    style="
+                        max-width: 600px;
+                        width: 100%;
+                        background-color: #ffffff;
+                        border-radius: 14px;
+                        overflow: hidden;
+                    ">
 
-                    <!-- Encabezado -->
+                    <!-- ================================================= -->
+                    <!-- BANNER -->
+                    <!-- ================================================= -->
+
                     <tr>
                         <td align="center"
-                            style="background-color: #111111; padding: 0;">
+                            style="
+                                background-color: #30001d;
+                                padding: 0;
+                            ">
 
-                            <img src="cid:BANNER_EMAIL"
+                            <img src="cid:BANNER_EMAIL2"
                                 alt="COUNTRYCON"
                                 width="600"
                                 style="
@@ -28,45 +51,424 @@
                                     width: 100%;
                                     max-width: 600px;
                                     height: auto;
+                                    border: 0;
                                 ">
 
                         </td>
                     </tr>
 
-                    <!-- Contenido -->
+
+                    <!-- ================================================= -->
+                    <!-- MENSAJE DE BIENVENIDA -->
+                    <!-- ================================================= -->
+
                     <tr>
-                        <td style="padding: 35px 30px;">
+                        <td style="
+                            padding: 32px 30px 20px 30px;
+                            background-color: #ffffff;
+                        ">
 
-                            <p style="margin: 0 0 15px; font-size: 18px; color: #222222;">
-                                Hola {{ ticket.buyer.nombre }},
-                            </p>
+                            <div style="
+                                font-size: 12px;
+                                font-weight: bold;
+                                letter-spacing: 2px;
+                                color: #ff963f;
+                                text-transform: uppercase;
+                                margin-bottom: 10px;
+                            ">
+                                ENTRADA OFICIAL
+                            </div>
 
-                            <p style="margin: 0 0 25px; font-size: 15px; line-height: 1.6; color: #555555;">
-                                Tu entrada para <strong>COUNTRYCON</strong> ha sido
-                                confirmada correctamente.
-                            </p>
+                            <div style="
+                                font-size: 24px;
+                                font-weight: bold;
+                                color: #30001d;
+                                margin-bottom: 10px;
+                            ">
+                                ¡Hola {{ ticket.buyer.nombre }}! 👋
+                            </div>
 
-                            <!-- Información del ticket -->
+                            <div style="
+                                font-size: 15px;
+                                line-height: 1.6;
+                                color: #555555;
+                            ">
+                                Tu entrada para
+                                <strong style="color: #30001d;">
+                                    COUNTRYCON
+                                </strong>
+                                ha sido confirmada correctamente.
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- ================================================= -->
+                    <!-- TICKET -->
+                    <!-- ================================================= -->
+
+                    <tr>
+                        <td style="
+                            padding: 5px 25px 0 25px;
+                            background-color: #ffffff;
+                        ">
+
                             <table width="100%" cellpadding="0" cellspacing="0" border="0"
-                                   style="background-color: #f7f7f7; border-radius: 8px; margin-bottom: 30px;">
+                                style="
+                                    background-color: #30001d;
+                                    border-radius: 12px;
+                                    overflow: hidden;
+                                ">
+
+                                <!-- CABECERA DEL TICKET -->
 
                                 <tr>
-                                    <td style="padding: 20px;">
+                                    <td style="
+                                        padding: 20px 22px;
+                                        border-bottom: 1px solid #5b2347;
+                                    ">
 
-                                        <div style="font-size: 12px; color: #777777; margin-bottom: 5px;">
-                                            CÓDIGO DE TICKET
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                                            <tr>
+
+                                                <!-- Código -->
+                                                <td width="65%" valign="middle">
+
+                                                    <div style="
+                                                        font-size: 11px;
+                                                        color: #d7b8c9;
+                                                        letter-spacing: 1.5px;
+                                                        margin-bottom: 6px;
+                                                    ">
+                                                        CÓDIGO DE ENTRADA
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 27px;
+                                                        font-weight: bold;
+                                                        color: #ffffff;
+                                                        letter-spacing: 1px;
+                                                    ">
+                                                        {{ ticket.code }}
+                                                    </div>
+
+                                                </td>
+
+                                                <!-- Tipo -->
+                                                <td width="35%" align="right" valign="middle">
+
+                                                    <div style="
+                                                        display: inline-block;
+                                                        background-color: #ff963f;
+                                                        color: #30001d;
+                                                        font-size: 12px;
+                                                        font-weight: bold;
+                                                        letter-spacing: 1px;
+                                                        padding: 8px 13px;
+                                                        border-radius: 20px;
+                                                    ">
+                                                        {{ ticket.ticket_type.nombre|upper }}
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+
+                                <!-- INFORMACIÓN -->
+
+                                <tr>
+                                    <td style="
+                                        padding: 20px 22px;
+                                    ">
+
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                                            <tr>
+
+                                                <!-- FECHA -->
+                                                <td width="50%" valign="top">
+
+                                                    <div style="
+                                                        font-size: 10px;
+                                                        color: #d7b8c9;
+                                                        letter-spacing: 1.2px;
+                                                        margin-bottom: 5px;
+                                                    ">
+                                                        FECHA
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 15px;
+                                                        font-weight: bold;
+                                                        color: #ffffff;
+                                                    ">
+                                                        10 DE OCTUBRE 2026
+                                                    </div>
+
+                                                </td>
+                                                <!-- UBICACIÓN -->
+                                                <td width="50%" valign="top">
+
+                                                    <div style="
+                                                        font-size: 10px;
+                                                        color: #d7b8c9;
+                                                        letter-spacing: 1.2px;
+                                                        margin-bottom: 5px;
+                                                    ">
+                                                        UBICACIÓN
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 15px;
+                                                        font-weight: bold;
+                                                        color: #ffffff;
+                                                        margin-bottom: 8px;
+                                                    ">
+                                                        Instituto CEPEBAN, Lince
+                                                    </div>
+
+                                                    <a href="https://maps.app.goo.gl/cPYLJbV12TonnV7o6"
+                                                    target="_blank"
+                                                    style="
+                                                            display: inline-block;
+                                                            color: #ff8a00;
+                                                            font-size: 12px;
+                                                            font-weight: bold;
+                                                            text-decoration: none;
+                                                    ">
+                                                        📍 Ver ubicación en Google Maps →
+                                                    </a>
+
+                                                </td>
+
+
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+
+                                <!-- ================================================= -->
+                                <!-- REGALO -->
+                                <!-- ================================================= -->
+
+                                {% if gift %}
+
+                                <tr>
+                                    <td style="
+                                        padding: 0 22px 22px 22px;
+                                    ">
+
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                            style="
+                                                background-color: #42102e;
+                                                border: 1px solid #703653;
+                                                border-radius: 8px;
+                                            ">
+
+                                            <tr>
+                                                <td style="padding: 15px;">
+
+                                                    <div style="
+                                                        font-size: 10px;
+                                                        color: #ff963f;
+                                                        font-weight: bold;
+                                                        letter-spacing: 1.5px;
+                                                        margin-bottom: 6px;
+                                                    ">
+                                                        🎁 TU REGALO
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 16px;
+                                                        font-weight: bold;
+                                                        color: #ffffff;
+                                                        margin-bottom: 5px;
+                                                    ">
+                                                        {{ gift.type|title }}
+                                                    </div>
+
+                                                    <div style="
+                                                        font-size: 13px;
+                                                        color: #d7b8c9;
+                                                    ">
+                                                        Elección:
+                                                        <strong style="color: #ffffff;">
+                                                            {{ gift.selection }}
+                                                        </strong>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                {% endif %}
+
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- ================================================= -->
+                    <!-- DIVISOR TIPO ENTRADA -->
+                    <!-- ================================================= -->
+
+                    <tr>
+                        <td style="
+                            padding: 0 25px;
+                            background-color: #ffffff;
+                        ">
+
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+
+
+
+                                    <td style="
+                                        border-top: 2px dashed #dddddd;
+                                        font-size: 0;
+                                        line-height: 0;
+                                    ">
+                                        &nbsp;
+                                    </td>
+
+
+
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- ================================================= -->
+                    <!-- QR -->
+                    <!-- ================================================= -->
+
+                    <tr>
+                        <td align="center"
+                            style="
+                                padding: 25px 30px 10px 30px;
+                                background-color: #ffffff;
+                            ">
+
+                            <div style="
+                                font-size: 20px;
+                                font-weight: bold;
+                                color: #30001d;
+                                margin-bottom: 8px;
+                            ">
+                                Tu código QR
+                            </div>
+
+                            <div style="
+                                font-size: 14px;
+                                line-height: 1.5;
+                                color: #666666;
+                                margin-bottom: 20px;
+                            ">
+                                Presenta este código al momento de ingresar.
+                            </div>
+
+
+                            <!-- CAJA QR -->
+
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                style="
+                                    background-color: #ffffff;
+                                    border: 5px solid #30001d;
+                                    border-radius: 12px;
+                                ">
+
+                                <tr>
+                                    <td style="padding: 12px;">
+
+                                        <img src="cid:ticket_qr"
+                                            alt="Código QR de entrada"
+                                            width="220"
+                                            height="220"
+                                            style="
+                                                display: block;
+                                                width: 220px;
+                                                height: 220px;
+                                                border: 0;
+                                            ">
+
+                                    </td>
+                                </tr>
+
+                            </table>
+
+
+                            <!-- Código debajo del QR -->
+
+                            <div style="
+                                margin-top: 15px;
+                                font-size: 12px;
+                                color: #999999;
+                                letter-spacing: 1px;
+                            ">
+                                {{ ticket.code }}
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                    <!-- ================================================= -->
+                    <!-- AVISO -->
+                    <!-- ================================================= -->
+
+                    <tr>
+                        <td align="center"
+                            style="
+                                padding: 20px 35px 30px 35px;
+                                background-color: #ffffff;
+                            ">
+
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                style="
+                                    background-color: #fff5ed;
+                                    border-left: 4px solid #ff963f;
+                                ">
+
+                                <tr>
+                                    <td style="
+                                        padding: 13px 15px;
+                                        text-align: left;
+                                    ">
+
+                                        <div style="
+                                            font-size: 12px;
+                                            font-weight: bold;
+                                            color: #30001d;
+                                            margin-bottom: 4px;
+                                        ">
+                                            IMPORTANTE
                                         </div>
 
-                                        <div style="font-size: 24px; font-weight: bold; color: #111111; margin-bottom: 20px;">
-                                            {{ ticket.code }}
-                                        </div>
-
-                                        <div style="font-size: 12px; color: #777777; margin-bottom: 5px;">
-                                            TIPO DE ENTRADA
-                                        </div>
-
-                                        <div style="font-size: 16px; font-weight: bold; color: #111111;">
-                                            {{ ticket.ticket_type.nombre }}
+                                        <div style="
+                                            font-size: 12px;
+                                            line-height: 1.5;
+                                            color: #666666;
+                                        ">
+                                            Guarda este correo y ten tu código QR
+                                            listo para facilitar tu ingreso al evento.
                                         </div>
 
                                     </td>
@@ -74,39 +476,36 @@
 
                             </table>
 
-                            <!-- QR -->
-                            <div style="text-align: center;">
-
-                                <p style="margin: 0 0 15px; font-size: 15px; font-weight: bold; color: #222222;">
-                                    Tu código QR
-                                </p>
-
-                                <p style="margin: 0 0 20px; font-size: 14px; color: #666666;">
-                                    Presenta este código al ingresar al evento.
-                                </p>
-
-                                <img src="cid:ticket_qr"
-                                     alt="Código QR de entrada"
-                                     width="220"
-                                     style="display: block; margin: 0 auto; width: 220px; height: 220px;">
-
-                            </div>
-
-                            <p style="margin: 30px 0 0; text-align: center; font-size: 14px; color: #666666;">
-                                Te recomendamos guardar este correo para facilitar
-                                tu ingreso al evento.
-                            </p>
-
                         </td>
                     </tr>
 
-                    <!-- Footer -->
+
+                    <!-- ================================================= -->
+                    <!-- FOOTER -->
+                    <!-- ================================================= -->
+
                     <tr>
                         <td align="center"
-                            style="background-color: #111111; padding: 20px;">
+                            style="
+                                background-color: #30001d;
+                                padding: 25px 20px;
+                            ">
 
-                            <div style="font-size: 13px; color: #cccccc;">
-                                ¡Nos vemos en COUNTRYCON!
+                            <div style="
+                                font-size: 17px;
+                                font-weight: bold;
+                                color: #ffffff;
+                                margin-bottom: 8px;
+                            ">
+                                🎃 ¡Nos vemos en COUNTRYCON!
+                            </div>
+
+                            <div style="
+                                font-size: 11px;
+                                color: #cdaebe;
+                                letter-spacing: 1px;
+                            ">
+                                HALLOWEEN EDITION · 2026
                             </div>
 
                         </td>
@@ -116,6 +515,7 @@
 
             </td>
         </tr>
+
     </table>
 
 </body>

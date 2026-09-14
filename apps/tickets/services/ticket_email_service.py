@@ -46,7 +46,7 @@ class TicketEmailService:
             / "tickets"
             / "templates"
             / "email_assets"
-            / "BANNER_EMAIL.PNG"
+            / "BANNER_EMAIL2.PNG"
         )
 
         with open(banner_path, "rb") as banner_file:
@@ -57,19 +57,36 @@ class TicketEmailService:
 
         banner.add_header(
             "Content-ID",
-            "<BANNER_EMAIL>"
+            "<BANNER_EMAIL2>"
         )
 
         banner.add_header(
             "Content-Disposition",
             "inline",
-            filename="BANNER_EMAIL.PNG"
+            filename="BANNER_EMAIL2.PNG"
         )
+
+        gift = None
+
+        if ticket.ticket_type.nombre == "VIP":
+
+            regalos = ticket.ticket_type.regalos or {}
+            gift_selections = ticket.gift_selections or {}
+
+            llavero = regalos.get("llavero")
+
+            if llavero:
+                gift = {
+                    "type": "llavero",
+                    "quantity": llavero.get("cant", 0),
+                    "selection": gift_selections.get("llavero"),
+                }
 
         html_content = render_to_string(
             "emails/ticket_confirmation.html",
             {
                 "ticket": ticket,
+                "gift": gift,
             }
         )
 
