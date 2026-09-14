@@ -46,7 +46,7 @@ class TicketEmailService:
             / "tickets"
             / "templates"
             / "email_assets"
-            / "BANNER_EMAIL2.PNG"
+            / "BANNER_EMAIL2.png"
         )
 
         with open(banner_path, "rb") as banner_file:
