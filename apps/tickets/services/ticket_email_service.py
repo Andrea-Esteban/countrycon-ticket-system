@@ -1,16 +1,21 @@
 import io
+from email.message import MIMEPart
+from email.utils import make_msgid
+
 import qrcode
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-from email.mime.image import MIMEImage
-
 
 class TicketEmailService:
 
     def send_ticket_email(self, ticket):
+
+        # =========================================================
+        # QR
+        # =========================================================
 
         qr = qrcode.make(
             str(ticket.id_qr)
@@ -24,21 +29,22 @@ class TicketEmailService:
         )
 
         qr_buffer.seek(0)
-        qr_image = MIMEImage(
+
+        qr_cid = make_msgid()
+
+        qr_image = MIMEPart()
+
+        qr_image.set_content(
             qr_buffer.getvalue(),
-            _subtype="png"
+            maintype="image",
+            subtype="png",
+            disposition="inline",
+            cid=qr_cid,
         )
 
-        qr_image.add_header(
-            "Content-ID",
-            "<ticket_qr>"
-        )
-
-        qr_image.add_header(
-            "Content-Disposition",
-            "inline",
-            filename=f"{ticket.code}.png"
-        )
+        # =========================================================
+        # BANNER
+        # =========================================================
 
         banner_path = (
             settings.BASE_DIR
@@ -49,22 +55,23 @@ class TicketEmailService:
             / "BANNER_EMAIL2.png"
         )
 
+        banner_cid = make_msgid()
+
+        banner_image = MIMEPart()
+
         with open(banner_path, "rb") as banner_file:
-            banner = MIMEImage(
+
+            banner_image.set_content(
                 banner_file.read(),
-                _subtype="png"
+                maintype="image",
+                subtype="png",
+                disposition="inline",
+                cid=banner_cid,
             )
 
-        banner.add_header(
-            "Content-ID",
-            "<BANNER_EMAIL2>"
-        )
-
-        banner.add_header(
-            "Content-Disposition",
-            "inline",
-            filename="BANNER_EMAIL2.png"
-        )
+        # =========================================================
+        # REGALO
+        # =========================================================
 
         gift = None
 
@@ -76,19 +83,37 @@ class TicketEmailService:
             llavero = regalos.get("llavero")
 
             if llavero:
+
                 gift = {
                     "type": "llavero",
                     "quantity": llavero.get("cant", 0),
                     "selection": gift_selections.get("llavero"),
                 }
 
+        # =========================================================
+        # HTML
+        # =========================================================
+
         html_content = render_to_string(
             "emails/ticket_confirmation.html",
             {
                 "ticket": ticket,
                 "gift": gift,
+
+                # make_msgid() devuelve algo como:
+                # <abc123@servidor>
+                #
+                # En HTML necesitamos:
+                # abc123@servidor
+
+                "qr_cid": qr_cid[1:-1],
+                "banner_cid": banner_cid[1:-1],
             }
         )
+
+        # =========================================================
+        # EMAIL
+        # =========================================================
 
         email = EmailMultiAlternatives(
             subject="Tu entrada para COUNTRYCON",
@@ -97,7 +122,7 @@ class TicketEmailService:
                 "Tu entrada para COUNTRYCON ha sido confirmada.\n\n"
                 f"Código de ticket: {ticket.code}\n"
                 f"Tipo de ticket: {ticket.ticket_type.nombre}\n\n"
-                "Adjuntamos tu código QR para ingresar al evento.\n\n"
+                "Presenta tu código QR para ingresar al evento.\n\n"
                 "¡Nos vemos en COUNTRYCON!"
             ),
             to=[
@@ -110,8 +135,14 @@ class TicketEmailService:
             "text/html"
         )
 
-        email.attach(banner)
-        email.attach(qr_image)
+        # Imágenes INLINE
+        email.attach(
+            banner_image
+        )
+
+        email.attach(
+            qr_image
+        )
 
         email.send(
             fail_silently=False
