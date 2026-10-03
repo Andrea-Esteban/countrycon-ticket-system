@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsAdminOrValidador(BasePermission):
+class IsAdminOrValidator(BasePermission):
 
     message = "No tienes permisos para realizar esta acción."
 
@@ -18,7 +18,7 @@ class IsAdminOrValidador(BasePermission):
 
         return request.user.perfil.nombre in [
             "ADMIN",
-            "VALIDADOR",
+            "VALIDATOR",
         ]
 
 class IsAdmin(BasePermission):

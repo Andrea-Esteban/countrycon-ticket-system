@@ -5,7 +5,7 @@ from apps.tickets.decorators import perfil_requerido
 
 @perfil_requerido(
     "ADMIN",
-    "VALIDADOR"
+    "VALIDATOR"
 )
 def home_view(request):
 

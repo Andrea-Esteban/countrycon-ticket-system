@@ -227,7 +227,7 @@
           {% endif %}
 
           <!-- SCANNER -->
-          {% if user.perfil.nombre == "ADMIN" or user.perfil.nombre == "VALIDADOR" %}
+          {% if user.perfil.nombre == "ADMIN" or user.perfil.nombre == "VALIDATOR" %}
           <a
             href="{% url 'scanner' %}"
             class="{% if request.resolver_match.url_name == 'scanner' %}active{% endif %}"

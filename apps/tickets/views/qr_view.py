@@ -10,14 +10,14 @@ from apps.tickets.services.qr_service import QRService
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 
-from apps.tickets.permissions import IsAdminOrValidador
+from apps.tickets.permissions import IsAdminOrValidator
 
 
 class QRValidationView(APIView):
 
     permission_classes = [
         IsAuthenticated,
-        IsAdminOrValidador,
+        IsAdminOrValidator,
     ]
     def post(self, request):
 

@@ -243,6 +243,39 @@
     display: inline-block;
     min-width: 120px;
   }
+
+  .ticket-qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.ticket-qr-container h4 {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+#ticket-qr {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+#ticket-qr img,
+#ticket-qr canvas {
+    max-width: 100%;
+    height: auto;
+}
+
 </style>
 {% endblock %} 
 {% block content %}
@@ -371,6 +404,7 @@
 
 {% endblock %} 
 {% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   function getCSRFToken() {
     return document.querySelector("[name=csrfmiddlewaretoken]").value;
@@ -924,42 +958,58 @@
 
     const detail = document.getElementById("ticket-detail");
 
+
     detail.innerHTML = `
-              <div class="detail-row">
-                  <strong>Código:</strong>
-                  ${ticket.code}
-              </div>
+        <div class="detail-row">
+            <strong>Código:</strong>
+            ${ticket.code}
+        </div>
 
-              <div class="detail-row">
-                  <strong>Comprador:</strong>
-                  ${buyerName}
-              </div>
+        <div class="detail-row">
+            <strong>Comprador:</strong>
+            ${buyerName}
+        </div>
 
-              <div class="detail-row">
-                  <strong>Tipo:</strong>
-                  ${ticket.ticket_type}
-              </div>
+        <div class="detail-row">
+            <strong>Tipo:</strong>
+            ${ticket.ticket_type}
+        </div>
 
-              <div class="detail-row">
-                  <strong>Regalo:</strong>
-                  ${giftHtml}
-              </div>
+        <div class="detail-row">
+            <strong>Regalo:</strong>
+            ${giftHtml}
+        </div>
 
-              <div class="detail-row">
-                  <strong>Pagado:</strong>
-                  ${ticket.is_paid ? "Sí" : "No"}
-              </div>
+        <div class="detail-row">
+            <strong>Pagado:</strong>
+            ${ticket.is_paid ? "Sí" : "No"}
+        </div>
 
-              <div class="detail-row">
-                  <strong>Utilizado:</strong>
-                  ${ticket.is_used ? "Sí" : "No"}
-              </div>
+        <div class="detail-row">
+            <strong>Utilizado:</strong>
+            ${ticket.is_used ? "Sí" : "No"}
+        </div>
 
-              <div class="detail-row">
-                  <strong>QR:</strong>
-                  <small>${ticket.id_qr}</small>
-              </div>
-          `;
+        <div class="detail-row">
+            <strong>QR:</strong>
+            <small>${ticket.id_qr}</small>
+        </div>
+
+        <div class="ticket-qr-container">
+            <h4>Código QR del ticket</h4>
+            <div id="ticket-qr"></div>
+        </div>
+    `;
+
+    new QRCode(document.getElementById("ticket-qr"), {
+        text: String(ticket.id_qr),
+        width: 220,
+        height: 220,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
 
     document.getElementById("ticket-modal").style.display = "flex";
   }
