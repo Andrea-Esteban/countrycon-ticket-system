@@ -804,14 +804,14 @@
                           class="detail-button"
                           onclick="showTicketDetail(${ticket.id})"
                       >
-                          👁 Ver
+                          <i class="fa-solid fa-eye"></i> Ver
                       </button>
                       <button
                           class="btn-action"
                           onclick="editTicket(${ticket.id})"
                           title="Editar"
                       >
-                          ✏️
+                        <i class="fa-solid fa-pen-to-square"></i>
                       </button>
 
                       <button
@@ -819,7 +819,7 @@
                           onclick="deactivateTicket(${ticket.id})"
                           title="Desactivar"
                       >
-                          🗑️
+                          <i class="fa-solid fa-trash"></i>
                       </button>
                   </td>
 
@@ -843,7 +843,7 @@
                           class="payment-status paid"
                           title="Ticket pagado"
                       >
-                          🟢
+                          <i class="fa-solid fa-circle-check"></i>
                       </span>
                   `;
     }
@@ -855,7 +855,7 @@
                       title="Marcar como pagado"
                       onclick="markTicketAsPaid(${ticket.id})"
                   >
-                      🔴
+                  <i class="fa-solid fa-circle-xmark"></i>
                   </button>
               `;
   }
@@ -877,46 +877,34 @@
   }
 
   async function markTicketAsPaid(ticketId) {
-    const confirmed = confirm(
-      "¿Confirmas que este ticket ha sido pagado?\n\n" +
-        "Se enviará el código QR al correo del comprador.",
-    );
+    const ticket = tickets.find((t) => Number(t.id) === Number(ticketId));
+    if (!ticket) return;
 
-    if (!confirmed) {
-      return;
-    }
+    const ok = await confirmAction({
+      title: "Marcar como pagado",
+      body: `Ticket <strong>${escapeHtml(ticket.code)}</strong>. Se enviará el QR al correo del comprador.`,
+      confirmText: "Marcar y enviar QR",
+    });
+    if (!ok) return;
 
     try {
       const response = await fetch(`${BASE_URL}/api/tickets/${ticketId}/`, {
         method: "PATCH",
-
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": getCSRFToken(),
         },
-
-        body: JSON.stringify({
-          is_paid: true,
-        }),
+        body: JSON.stringify({ is_paid: true }),
       });
-
       const result = await response.json();
-
       if (!response.ok) {
-        throw new Error(
-          result.message ||
-            result.detail ||
-            "No se pudo marcar el ticket como pagado.",
-        );
+        throw new Error(result.message || result.detail || "No se pudo marcar el ticket como pagado.");
       }
-
-      alert("Ticket pagado correctamente. Se envió el QR al correo.");
-
+      toast("success", "Ticket marcado como pagado. QR enviado al comprador.");
       await loadTickets();
     } catch (error) {
       console.error(error);
-
-      alert(error.message);
+      toast("danger", error.message);
     }
   }
   function showTicketDetail(ticketId) {

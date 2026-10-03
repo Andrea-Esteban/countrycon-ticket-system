@@ -1,275 +1,229 @@
+
+{% load static %}
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}COUNTRYCON{% endblock %}</title>
 
-    <title>{% block title %} COUNTRYCON {% endblock %}</title>
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+    <!-- Font Awesome -->
+    <script
+        src="https://kit.fontawesome.com/1c86468e61.js"
+        crossorigin="anonymous">
+    </script>
 
-      body {
+<style>
+    body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f5f6f8;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f6f7fb;
         color: #1f2937;
-      }
+    }
 
-      /* =========================
-           HEADER
-        ========================= */
-
-      .header {
-        height: 70px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        padding: 0 30px;
-
-        background: #ffffff;
-
-        border-bottom: 1px solid #e5e7eb;
-
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
+    .main-header {
         position: sticky;
         top: 0;
-        z-index: 1000;
-      }
+        z-index: 1030;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+    }
 
-      .header-left {
-        display: flex;
+    .brand-icon, .user-avatar {
+        display: inline-flex;
         align-items: center;
-        gap: 35px;
-      }
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        background: #eeecff;
+        color: #5b4bdb;
+    }
 
-      .logo {
-        font-size: 23px;
-        font-weight: 800;
-        color: #111827;
-        text-decoration: none;
-      }
+    .brand-icon {
+        background: #5b4bdb;
+        color: #fff;
+    }
 
-      /* =========================
-           NAV
-        ========================= */
-
-      .main-nav {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .main-nav a {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-
-        padding: 9px 13px;
-
-        border-radius: 8px;
-
-        text-decoration: none;
-
+    .nav-link {
         color: #4b5563;
-
         font-size: 14px;
         font-weight: 600;
-
-        transition:
-          background 0.2s ease,
-          color 0.2s ease;
-      }
-
-      .main-nav a:hover {
-        background: #f3f4f6;
-        color: #111827;
-      }
-
-      .main-nav a.active {
-        background: #111827;
-        color: #ffffff;
-      }
-
-      /* =========================
-           USER
-        ========================= */
-
-      .header-right {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-      }
-
-      .user-info {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-      }
-
-      .user-name {
-        font-size: 14px;
-        font-weight: 600;
-        color: #111827;
-      }
-
-      .user-profile {
-        margin-top: 2px;
-
-        font-size: 11px;
-        font-weight: 600;
-
-        color: #6b7280;
-        text-transform: uppercase;
-      }
-
-      .logout-button {
-        padding: 8px 13px;
-
         border-radius: 8px;
+    }
 
-        text-decoration: none;
+    .nav-link:hover,
+    .nav-link.active {
+        color: #5b4bdb;
+        background: #eeecff;
+    }
 
-        color: #dc2626;
+    .user-profile {
+        font-size: 10px;
+        color: #6b7280;
+        font-weight: 700;
+    }
 
-        font-size: 13px;
-        font-weight: 600;
+    .page-content {
+        padding: 25px;
+    }
 
-        transition: background 0.2s ease;
-      }
-
-      .logout-button:hover {
-        background: #fef2f2;
-      }
-
-      /* =========================
-           CONTENIDO
-        ========================= */
-
-      .page-content {
-        padding: 30px;
-      }
-
-      /* =========================
-           RESPONSIVE
-        ========================= */
-
-      @media (max-width: 900px) {
-        .header {
-          padding: 0 15px;
-        }
-
-        .header-left {
-          gap: 15px;
-        }
-
-        .main-nav a {
-          padding: 8px;
-        }
-
-        .main-nav a span.text {
-          display: none;
-        }
-
-        .user-info {
-          display: none;
-        }
-
+    @media (max-width: 991.98px) {
         .page-content {
-          padding: 20px 15px;
+            padding: 18px 12px;
         }
-      }
-    </style>
+    }
+</style>
 
-    {% block extra_css %} {% endblock %}
-  </head>
 
-  <body>
-    <header class="header">
-      <div class="header-left">
-        <a href="{% url 'home' %}" class="logo"> COUNTRYCON </a>
-        <nav class="main-nav">
-          {% if user.is_authenticated %}
+    {% block extra_css %}{% endblock %}
+</head>
 
-          <!-- INICIO -->
-          <a
-            href="{% url 'home' %}"
-            class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-          >
-            🏠
-            <span class="text">Inicio</span>
-          </a>
+<body>
 
-          <!-- TICKETS -->
-          {% if user.perfil.nombre == "ADMIN" %}
-          <a
-            href="{% url 'tickets' %}"
-            class="{% if request.resolver_match.url_name == 'tickets' %}active{% endif %}"
-          >
-            🎫
-            <span class="text">Tickets</span>
-          </a>
 
-          <!-- COMPRADORES -->
-          <a
-            href="{% url 'buyers' %}"
-            class="{% if request.resolver_match.url_name == 'buyers' %}active{% endif %}"
-          >
-            👥
-            <span class="text">Compradores</span>
-          </a>
-          {% endif %}
+<header class="main-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-3 px-lg-4">
 
-          <!-- SCANNER -->
-          {% if user.perfil.nombre == "ADMIN" or user.perfil.nombre == "VALIDATOR" %}
-          <a
-            href="{% url 'scanner' %}"
-            class="{% if request.resolver_match.url_name == 'scanner' %}active{% endif %}"
-          >
-            📷
-            <span class="text">Scanner</span>
-          </a>
-          {% endif %}
+            <!-- LOGO -->
+            <a href="{% url 'home' %}"
+               class="navbar-brand d-flex align-items-center gap-2 me-lg-4">
 
-          <!-- USUARIOS -->
-            {% if user.perfil.nombre == "ADMIN" %}
-            <a
-              href="{% url 'users' %}"
-              class="{% if request.resolver_match.url_name == 'users' %}active{% endif %}"
-            >
-              👤
-              <span class="text">Usuarios</span>
+                <span class="brand-icon">
+                    <i class="fa-solid fa-ticket"></i>
+                </span>
+
+                <span class="fw-bold">COUNTRYCON</span>
             </a>
-            {% endif %} 
-          {% endif %}
-        </nav>
-      </div>
 
-      {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
 
-      <div class="header-right">
-        <div class="user-info">
-          <span class="user-name"> {{ user.username }} </span>
+            <!-- USUARIO EN PC -->
+            <div class="d-flex align-items-center gap-2 order-lg-3 ms-auto ms-lg-3">
 
-          <span class="user-profile"> {{ user.perfil.nombre }} </span>
+                <div class="user-avatar fw-bold">
+                    {{ user.username|first|upper }}
+                </div>
+
+                <div class="d-none d-xl-flex flex-column">
+                    <span class="fw-semibold small">
+                        {{ user.username }}
+                    </span>
+                    <span class="user-profile">
+                        {{ user.perfil.nombre }}
+                    </span>
+                </div>
+
+                <a href="{% url 'logout' %}"
+                   class="btn btn-outline-danger btn-sm ms-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="d-none d-sm-inline">Salir</span>
+                </a>
+            </div>
+
+            <!-- BOTÓN MÓVIL -->
+            <button class="navbar-toggler ms-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Abrir menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- OPCIONES -->
+            <div class="collapse navbar-collapse order-lg-2"
+                 id="mainNavbar">
+
+                <div class="navbar-nav gap-lg-1 mt-3 mt-lg-0">
+
+                    <!-- INICIO -->
+                    <a href="{% url 'home' %}"
+                       class="nav-link px-3 {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        <i class="fa-solid fa-house me-2"></i>Inicio
+                    </a>
+
+                    {% if user.perfil.nombre == "ADMIN" %}
+
+                    <!-- TICKETS -->
+                    <a href="{% url 'tickets' %}"
+                       class="nav-link px-3 {% if request.resolver_match.url_name == 'tickets' %}active{% endif %}">
+                        <i class="fa-solid fa-ticket me-2"></i>Tickets
+                    </a>
+
+                    <!-- COMPRADORES -->
+                    <a href="{% url 'buyers' %}"
+                       class="nav-link px-3 {% if request.resolver_match.url_name == 'buyers' %}active{% endif %}">
+                        <i class="fa-solid fa-users me-2"></i>Compradores
+                    </a>
+
+                    <!-- USUARIOS -->
+                    <a href="{% url 'users' %}"
+                       class="nav-link px-3 {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+                        <i class="fa-solid fa-user-shield me-2"></i>Usuarios
+                    </a>
+
+                    {% endif %}
+
+                    {% if user.perfil.nombre == "ADMIN" or user.perfil.nombre == "VALIDATOR" %}
+
+                    <!-- SCANNER -->
+                    <a href="{% url 'scanner' %}"
+                       class="nav-link px-3 {% if request.resolver_match.url_name == 'scanner' %}active{% endif %}">
+                        <i class="fa-solid fa-qrcode me-2"></i>Scanner QR
+                    </a>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+            {% endif %}
+
         </div>
+    </nav>
+</header>
 
-        <a href="{% url 'logout' %}" class="logout-button"> Cerrar sesión </a>
-      </div>
 
-      {% endif %}
-    </header>
+    <!-- CONTENIDO DE CADA PÁGINA -->
+    <main class="page-content">
+        {% block content %}{% endblock %}
 
-    <main class="page-content">{% block content %} {% endblock %}</main>
-    <script> const BASE_URL = "{{ DJANGO_BASE_URL }}"; </script>
+    <!-- Contenedor de avisos -->
+    <div id="toast-area" class="toast-container position-fixed top-0 end-0 p-3"></div>
 
-    {% block extra_js %} 
-    {% endblock %}
-  </body>
+    <!-- Modal de confirmación reutilizable -->
+    <div class="modal fade" id="confirm-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" data-confirm></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = "{{ DJANGO_BASE_URL|escapejs }}";
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'tickets\js\countrycon.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
+</body>
 </html>

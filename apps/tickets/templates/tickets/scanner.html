@@ -3,110 +3,79 @@
 {% block title %}
     Countrycon - Scanner
 {% endblock %}
-
 {% block extra_css %}
 <style>
     .scanner-page {
-        min-height: calc(100vh - 80px);
         width: 100%;
-
         display: flex;
         justify-content: center;
-        align-items: center;
-
-        padding: 40px 20px;
+        padding: 16px 0;
     }
-
-    .scanner-container {
-        width: 100%;
-        max-width: 500px;
-    }
+    .scanner-container { width: 100%; max-width: 500px; }
 
     .scanner-card {
-        background: white;
+        background: #fff;
+        border: 1px solid #e5e7eb;
         border-radius: 16px;
-        padding: 24px;
-
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
+        padding: 20px;
         text-align: center;
     }
+    .scanner-card h1 { font-size: 1.25rem; font-weight: 700; margin: 0 0 4px; }
+    .scanner-card > p { color: #6b7280; margin-bottom: 12px; }
 
-    .scanner-card h1 {
-        margin-top: 0;
-        margin-bottom: 20px;
-    }
+    #reader { width: 100%; max-width: 400px; margin: 0 auto; }
+    #reader video { border-radius: 10px; }
 
-    .scanner-card > p {
-        margin-bottom: 20px;
-    }
-
-    #reader {
-        width: 100%;
-        max-width: 400px;
-        margin: 20px auto;
-    }
-
-    #reader video {
-        border-radius: 10px;
-    }
-
+    /* ---------- Resultado ---------- */
     #result {
         display: none;
-        margin-top: 20px;
-        padding: 20px;
-        border-radius: 12px;
+        margin-top: 16px;
+        text-align: left;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--rc);
     }
+    #result.is-success { --rc: #15803d; }
+    #result.is-warning { --rc: #b45309; }
+    #result.is-error   { --rc: #b91c1c; }
 
-    #result.success {
-        display: block;
-        background: #d1fae5;
-        color: #065f46;
+    .cc-result__head {
+        background: var(--rc);
+        color: #fff;
+        text-align: center;
+        padding: 20px 16px;
     }
+    .cc-result__icon  { font-size: 2.75rem; line-height: 1; }
+    .cc-result__title { margin: 8px 0 4px; font-size: 1.5rem; font-weight: 700; }
+    .cc-result__msg   { margin: 0; font-size: .95rem; opacity: .95; }
 
-    #result.error {
-        display: block;
-        background: #fee2e2;
-        color: #991b1b;
+    .cc-result__body  { background: #fff; padding: 8px 16px 16px; }
+
+    .cc-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
     }
+    .cc-row:last-child { border-bottom: 0; }
+    .cc-row dt { color: #6b7280; font-weight: 500; margin: 0; }
+    .cc-row dd { margin: 0; font-weight: 700; text-align: right; }
 
-    #result.warning {
-        display: block;
+    .cc-notice {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-top: 8px;
+        padding: 12px;
+        border-radius: 10px;
         background: #fef3c7;
         color: #92400e;
+        border: 1px solid #fcd34d;
     }
+    .cc-notice i { margin-top: 3px; }
 
-    #result h2 {
-        margin-top: 0;
-    }
-
-    .ticket-info {
-        margin-top: 15px;
-        text-align: left;
-    }
-
-    .ticket-info p {
-        margin: 8px 0;
-    }
-
-    #scan-again {
-        display: none;
-        margin-top: 15px;
-
-        border: none;
-        border-radius: 8px;
-        padding: 12px 20px;
-
-        cursor: pointer;
-        font-size: 16px;
-
-        background: #111827;
-        color: white;
-    }
-
-    #scan-again:hover {
-        background: #1f2937;
-    }
+    #scan-again { display: none; margin-top: 16px; }
 </style>
 {% endblock %}
 
@@ -129,12 +98,9 @@
 
             <div id="result"></div>
 
-            <button
-                type="button"
-                id="scan-again"
-                onclick="restartScanner()"
-            >
-                Escanear nuevamente
+            <button type="button" id="scan-again" class="btn btn-primary btn-lg w-100"
+                    onclick="restartScanner()">
+                <i class="fa-solid fa-qrcode me-2"></i>Escanear siguiente
             </button>
 
         </div>
@@ -164,95 +130,58 @@
     console.log("Iniciando scanner...");
 
 
-    function showResult(
-        type,
-        title,
-        message,
-        ticket = null,
-        usedAt = null
-    ) {
+const RESULT_ICON = {
+    success: "fa-circle-check",
+    warning: "fa-triangle-exclamation",
+    error:   "fa-circle-xmark",
+};
 
-        const result = document.getElementById("result");
+function showResult(type, title, message, ticket = null, usedAt = null) {
+    const box = document.getElementById("result");
+    const rows = [];
 
-        result.className = type;
-
-        let html = `
-            <h2>${title}</h2>
-            <p>${message}</p>
-        `;
-
-        if (ticket) {
-
-            html += `
-                <div class="ticket-info">
-
-                    <p>
-                        <strong>Código:</strong>
-                        ${ticket.code}
-                    </p>
-
-                    <p>
-                        <strong>Tipo:</strong>
-                        ${ticket.ticket_type}
-                    </p>
-            `;
-
-            if (ticket.gift) {
-
-                html += `
-                    <p>
-                        <strong>Regalo:</strong>
-                        ${ticket.gift.type}
-                    </p>
-
-                    <p>
-                        <strong>Cantidad:</strong>
-                        ${ticket.gift.quantity}
-                    </p>
-
-                    <p>
-                        <strong>Selección:</strong>
-                        ${ticket.gift.selection}
-                    </p>
-                `;
-            }
-
-            if (ticket.partner) {
-
-                html += `
-                    <p>
-                        <strong>
-                            El ingresante es menor de edad
-                            y su acompañante es:
-                        </strong>
-
-                        ${ticket.partner.nombre}
-                        ${ticket.partner.apellido_paterno}
-                        ${ticket.partner.apellido_materno}
-                    </p>
-                `;
-            }
-
-            html += `
-                </div>
-            `;
+    if (ticket) {
+        rows.push(["Código", ticket.code]);
+        rows.push(["Tipo", ticket.ticket_type]);
+        if (ticket.gift) {
+            rows.push(["Regalo", `${ticket.gift.type}: ${ticket.gift.selection}`]);
         }
-
-        if (usedAt) {
-
-            const date = new Date(usedAt);
-
-            html += `
-                <p>
-                    <strong>Utilizado:</strong>
-                    ${date.toLocaleString("es-PE")}
-                </p>
-            `;
-        }
-
-        result.innerHTML = html;
-        result.style.display = "block";
     }
+    if (usedAt) {
+        rows.push(["Ingresó", new Date(usedAt).toLocaleString("es-PE")]);
+    }
+
+    const rowsHtml = rows.length
+        ? `<dl class="mb-0">${rows.map(([k, v]) =>
+            `<div class="cc-row"><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`
+          ).join("")}</dl>`
+        : "";
+
+    let partnerHtml = "";
+    if (ticket && ticket.partner) {
+        const name = [ticket.partner.nombre, ticket.partner.apellido_paterno, ticket.partner.apellido_materno]
+            .filter(Boolean).join(" ");
+        partnerHtml = `
+            <div class="cc-notice">
+                <i class="fa-solid fa-child-reaching"></i>
+                <div><strong>Menor de edad.</strong><br>Acompañante: ${escapeHtml(name)}</div>
+            </div>`;
+    }
+
+    box.className = `is-${type}`;
+    box.innerHTML = `
+        <div class="cc-result__head">
+            <i class="fa-solid ${RESULT_ICON[type]} cc-result__icon" aria-hidden="true"></i>
+            <h2 class="cc-result__title">${escapeHtml(title)}</h2>
+            <p class="cc-result__msg">${escapeHtml(message)}</p>
+        </div>
+        ${rowsHtml || partnerHtml ? `<div class="cc-result__body">${rowsHtml}${partnerHtml}</div>` : ""}
+    `;
+    box.style.display = "block";
+    box.scrollIntoView({ block: "start", behavior: "smooth" });
+    document.getElementById("scan-again").style.display = "block";
+    if (navigator.vibrate) navigator.vibrate(type === "success" ? 120 : [120, 80, 120]);
+}
 
 
     async function validateQR(idQr) {
@@ -279,40 +208,13 @@
 
 
             if (response.status === 200) {
-
-                showResult(
-                    "success",
-                    "✓ TICKET VÁLIDO",
-                    "Entrada registrada correctamente.",
-                    data.ticket
-                );
-
+                showResult("success", "Entrada válida", "Ingreso registrado.", data.ticket);
             } else if (response.status === 409) {
-
-                showResult(
-                    "warning",
-                    "⚠ TICKET YA UTILIZADO",
-                    data.message,
-                    data.ticket,
-                    data.used_at
-                );
-
+                showResult("warning", "Entrada ya utilizada", data.message, data.ticket, data.used_at);
             } else if (response.status === 404) {
-
-                showResult(
-                    "error",
-                    "✕ QR NO ENCONTRADO",
-                    data.message
-                );
-
+                showResult("error", "Código no reconocido", data.message || "Este QR no corresponde a una entrada de COUNTRYCON.");
             } else {
-
-                showResult(
-                    "error",
-                    "✕ ERROR",
-                    data.message ||
-                    "No se pudo validar el QR."
-                );
+                showResult("error", "No se pudo validar", data.message || "No se pudo validar el QR.");
             }
 
         } catch (error) {

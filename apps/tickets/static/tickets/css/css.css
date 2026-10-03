@@ -1,0 +1,39 @@
+:root{
+  --cc-primary:#5b4bdb; --cc-primary-dark:#4535bd; --cc-primary-soft:#eeecff;
+  --cc-border:#e5e7eb; --cc-muted:#6b7280;
+  --bs-primary:#5b4bdb; --bs-primary-rgb:91,75,219;
+  --bs-body-bg:#f6f7fb; --bs-body-color:#1f2937;
+  --bs-body-font-family:"Segoe UI",Arial,sans-serif;
+}
+.btn-primary{
+  --bs-btn-bg:#5b4bdb; --bs-btn-border-color:#5b4bdb;
+  --bs-btn-hover-bg:#4535bd; --bs-btn-hover-border-color:#4535bd;
+  --bs-btn-active-bg:#3b2da3; --bs-btn-active-border-color:#3b2da3;
+  --bs-btn-disabled-bg:#5b4bdb; --bs-btn-disabled-border-color:#5b4bdb;
+}
+.card{border:1px solid var(--cc-border); border-radius:12px; box-shadow:none}
+
+/* Estados de ticket */
+.cc-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .6rem;
+  border-radius:999px;font-size:.8125rem;font-weight:600}
+.cc-badge--paid{background:#dcfce7;color:#15803d}
+.cc-badge--pending{background:#fef3c7;color:#b45309}
+.cc-badge--used{background:#f3f4f6;color:#4b5563}
+.cc-badge--off{background:#fee2e2;color:#b91c1c}
+
+/* Tabla → tarjetas en móvil (añade data-label="Código" etc. a cada <td>) */
+@media (max-width:767.98px){
+  .cc-table thead{display:none}
+  .cc-table tr{display:block;border:1px solid var(--cc-border);border-radius:12px;
+    background:#fff;margin-bottom:.75rem;padding:.5rem .75rem}
+  .cc-table td{display:flex;justify-content:space-between;gap:1rem;border:0;padding:.35rem 0}
+  .cc-table td::before{content:attr(data-label);color:var(--cc-muted);font-weight:600}
+}
+.cc-result {
+  display: none;
+  color: #fff;
+  text-align: left;
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
