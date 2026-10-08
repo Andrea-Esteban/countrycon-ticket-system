@@ -18,19 +18,48 @@ function toast(type, text) {            // type: success | warning | danger
   new bootstrap.Toast(el, { delay: type === "danger" ? 7000 : 3500 }).show();
 }
 
-function confirmAction({ title, body, confirmText = "Confirmar", variant = "primary" }) {
+
+function confirmAction({
+  title,
+  body,
+  confirmText = "Confirmar",
+  variant = "primary"
+}) {
   return new Promise((resolve) => {
     const modalEl = document.getElementById("confirm-modal");
-    if (!modalEl) { resolve(confirm(title)); return; }   // respaldo
+
+    if (!modalEl) {
+      resolve(window.confirm(title));
+      return;
+    }
+
     modalEl.querySelector(".modal-title").textContent = title;
-    modalEl.querySelector(".modal-body").innerHTML = body;   // escapa los datos antes de pasarlos
+    modalEl.querySelector(".modal-body").innerHTML = body;
+
     const ok = modalEl.querySelector("[data-confirm]");
     ok.textContent = confirmText;
     ok.className = `btn btn-${variant}`;
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl, {
+      backdrop: "static",
+      keyboard: false
+    });
+
     let answer = false;
-    ok.onclick = () => { answer = true; modal.hide(); };
-    modalEl.addEventListener("hidden.bs.modal", () => resolve(answer), { once: true });
+
+    const handleConfirm = () => {
+      answer = true;
+      modal.hide();
+    };
+
+    const handleHidden = () => {
+      ok.removeEventListener("click", handleConfirm);
+      resolve(answer);
+    };
+
+    ok.addEventListener("click", handleConfirm, { once: true });
+    modalEl.addEventListener("hidden.bs.modal", handleHidden, { once: true });
+
     modal.show();
   });
 }

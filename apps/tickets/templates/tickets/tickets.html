@@ -1,6 +1,14 @@
 {% extends "base.html" %} {% block title %} Gestión de Tickets - COUNTRYCON2026
 {% endblock %} {% block extra_css %}
 <style>
+    #confirm-modal {
+      z-index: 1060;
+  }
+
+  .modal-backdrop {
+      z-index: 1050;
+  }
+
   * {
     box-sizing: border-box;
   }
